@@ -5,10 +5,11 @@ pub fn create_trade(
   ctx: Context<CreateTrade>,
   title: String, description: String, asset: Asset, direction: bool,
   chart: String, entry_price: usize, target_price: usize, leverage: u8,
-  start_time: i64, hours_to_raise: u8
+  start_time: i64, hours_to_raise: u8, funding_goal: usize
 ) -> Result<()> {
   let trade = &mut ctx.accounts.trade;
 
+  // TODO: add all constraints
   require_gt!(leverage, 0);
 
   trade.create_trade(
@@ -22,7 +23,8 @@ pub fn create_trade(
     target_price,
     leverage,
     start_time,
-    hours_to_raise
+    hours_to_raise,
+    funding_goal
   )
 }
 

@@ -16,6 +16,6 @@ cpi = ["no-entrypoint"]
 default = []
 
 [dependencies]
-anchor-lang = "0.25.0"
+anchor-lang = { version = "0.25.0", features = ["init-if-needed"] }
 num-traits = "0.2"
 num-derive = "0.3"
