@@ -3,8 +3,8 @@ use anchor_lang::prelude::*;
 
 #[account]
 pub struct Global {
-  last_user_id: usize,
-  last_trade_id: usize,
+  pub last_user_id: usize,
+  pub last_trade_id: usize,
   pub bump: u8,
 }
 

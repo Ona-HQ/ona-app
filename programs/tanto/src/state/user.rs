@@ -2,6 +2,7 @@ use anchor_lang::prelude::*;
 
 #[account]
 pub struct User {
+  id: usize,
   owner: Pubkey,
   twitter: String,
   avatar: String,
@@ -12,7 +13,7 @@ pub struct User {
 }
 
 impl User {
-  pub fn create_user(&mut self, twitter: String, bump: u8) -> Result<()> {
+  pub fn create_user(&mut self, id: usize, twitter: String, bump: u8) -> Result<()> {
     self.twitter = twitter;
     self.bump = bump;
 

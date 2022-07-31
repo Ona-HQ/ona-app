@@ -4,8 +4,11 @@ use anchor_lang::prelude::*;
 
 pub fn create_user(ctx: Context<CreateUser>, twitter: String) -> Result<()> {
   let user_account = &mut ctx.accounts.user_account;
+  let globals = &mut ctx.accounts.globals;
 
+  globals.last_user_id += 1;
   user_account.create_user(
+    globals.last_user_id,
     twitter,
     *ctx.bumps.get("user_account").unwrap()
   )

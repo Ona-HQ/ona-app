@@ -43,6 +43,23 @@ impl Trade {
   ) -> Result<()> {
     let now_ts = Clock::get().unwrap().unix_timestamp;
 
+    self.owner = owner;
+    self.title = title;
+    self.description = description;
+    self.asset = asset;
+    self.direction = direction;
+    self.chart = chart;
+    self.entry_price = entry_price;
+    self.target_price = target_price;
+    self.leverage = leverage;
+    self.start_time = start_time;
+    self.hours_to_raise = hours_to_raise;
+    self.funding_goal = funding_goal;
+
+    Ok(())
+  }
+
+  pub fn fund_trade(funder: Pubkey, amount: usize) -> Result<()> {
     Ok(())
   }
 }

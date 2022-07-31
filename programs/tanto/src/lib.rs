@@ -31,4 +31,19 @@ pub mod tanto {
   ) -> Result<()> {
     instructions::create_user::create_user(ctx, twitter)
   }
+
+  pub fn fund_trade(
+    ctx: Context<FundTrade>,
+    amount: usize
+  ) -> Result<()> {
+    Ok(())
+  }
+
+  // TODO: integrate with Mango Markets to start the trade
+  // Needs to be flexible enough so that the trade can be invested partially
+  pub fn start_trade(
+    ctx: Context<StartTrade>
+  ) -> Result<()> {
+    Ok(())
+  }
 }
