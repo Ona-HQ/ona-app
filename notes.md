@@ -1,4 +1,8 @@
 
+Mainnet Mango Program v3: mv3ekLzLbnVPNxjSKvqBpU3ZeZXPQdEC3bp5MDEBG68
+https://solanacookbook.com/integrations/mango.html#how-to-deposit-usdc-into-a-mango-account
+https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9bbf7b6dc58b939a0d64/code/mango/create-account/create-account.en.rs
+
 # TODO
 
 - Make sure there is a way to withdraw if trader doesn't make a trade (after X amount of time)?

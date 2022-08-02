@@ -6,6 +6,7 @@ use num_traits::*;
 // TODO: Trade is created through a PDA that has the user's public key and a trade ID?
 #[account]
 pub struct Trade {
+  pub id: usize,
   owner: Pubkey,
   title: String,
   description: String,
