@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#__next {
+  min-height: 100%;
+}
+
+.text-phantom {
+  color: #512da8;
+}
+
+.bg-phantom {
+  background-color: #512da8;
+}

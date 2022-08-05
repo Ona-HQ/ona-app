@@ -1,4 +1,7 @@
-
+.next
+.env
+.env.local
+secret
 .anchor
 .DS_Store
 target

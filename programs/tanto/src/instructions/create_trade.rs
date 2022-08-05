@@ -1,78 +1,60 @@
+use crate::errors::TantoError;
 use crate::state::trade::*;
+use crate::state::global::*;
 use anchor_lang::prelude::*;
-use anchor_lang::solana_program::instruction::Instruction;
-use anchor_lang::solana_program::program::invoke_signed;
-use mango::instruction::MangoInstruction::CreateMangoAccount;
+use anchor_spl::token::{Mint};
+
+pub mod usdc_token {
+  #[cfg(feature = "development")]
+  anchor_lang::declare_id!("8FRFC6MoGGkMFQwngccyu69VnYbzykGeez7ignHVAFSN");
+  #[cfg(not(feature = "development"))]
+  anchor_lang::declare_id!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+}
 
 pub fn create_trade(
   ctx: Context<CreateTrade>,
-  title: String, description: String, asset: Asset, direction: bool,
-  chart: String, entry_price: usize, target_price: usize, leverage: u8,
-  start_time: i64, hours_to_raise: u8, funding_goal: usize
+  title: String, description: String, asset: String, direction: bool,
+  chart: String, entry_price: i64, target_price: i64, leverage: u8,
+  start_time: i64, hours_to_raise: u8, funding_goal: i64, deposit_mint: Pubkey
 ) -> Result<()> {
   let trade = &mut ctx.accounts.trade;
+  let globals = &mut ctx.accounts.globals;
+  globals.last_trade_id += 1;
 
-  // TODO: add all constraints
   require_gt!(leverage, 0);
+  require_keys_eq!(trade.deposit_mint, anchor_spl::mint::USDC, TantoError::WrongTokenMint);
 
-  // let ix = Instruction::new_with_bincode(ctx.accounts.trade_owner.key(), &CreateMangoAccount { account_num: 50 }, vec![]);
-
-  let seeds = &[b"pool".as_ref()];// TODO, &[ctx.accounts.pool.bump]];
-  invoke_signed(
-    &mango::instruction::create_mango_account(
-      ctx.accounts.mango_program.key,
-      ctx.accounts.mango_group.key,
-      ctx.accounts.mango_account.key,
-      ctx.accounts.pool.key,
-      ctx.accounts.system_program.key,
-      ctx.accounts.trade_owner.key,
-      1
-    ).unwrap(),
-    &[
-      ctx.accounts.mango_program.to_account_info().clone(),
-      ctx.accounts.mango_group.to_account_info().clone(),
-      ctx.accounts.mango_account.to_account_info().clone(),
-      ctx.accounts.pool.to_account_info().clone(),
-      ctx.accounts.system_program.to_account_info().clone(),
-      ctx.accounts.trade_owner.to_account_info().clone(),
-    ],
-    &[&seeds[..]],
-  )?;
-
-  // trade.create_trade(
-  //   ctx.accounts.trade_owner.key(),
-  //   title,
-  //   description,
-  //   asset,
-  //   direction,
-  //   chart,
-  //   entry_price,
-  //   target_price,
-  //   leverage,
-  //   start_time,
-  //   hours_to_raise,
-  //   funding_goal
-  // )
-  Ok(())
+  trade.create_trade(
+    ctx.accounts.trade_owner.key(),
+    title,
+    description,
+    asset,
+    direction,
+    chart,
+    entry_price.try_into().unwrap(),
+    target_price.try_into().unwrap(),
+    leverage,
+    start_time,
+    hours_to_raise,
+    funding_goal,
+    deposit_mint,
+    *ctx.bumps.get("trade").unwrap()
+  )
 }
 
+// &[globals.last_trade_id.try_into().unwrap()
 #[derive(Accounts)]
 pub struct CreateTrade<'info> {
-  #[account(init, payer = trade_owner, space = 10000)] // TODO: make space dynamic
+  // TODO: make space dynamic
+  #[account(init, payer = trade_owner, space = 10000, seeds = [b"new-trade".as_ref(), trade_owner.key().as_ref()], bump)]
   pub trade: Account<'info, Trade>,
-  /// CHECK: This is not dangerous because validation happens on Mango end
-  pub mango_group: UncheckedAccount<'info>,
-  /// CHECK: This is not dangerous because validation happens on Mango end
-  pub mango_account: UncheckedAccount<'info>,
+
+  #[account(mut, seeds = [b"globals".as_ref()], bump = globals.bump)]
+  pub globals: Account<'info, Global>,
+
+  pub deposit_mint: Account<'info, Mint>,
+
   #[account(mut)]
   pub trade_owner: Signer<'info>,
-  /// CHECK: This is not dangerous because validation happens on Mango end
-  pub mango_program: UncheckedAccount<'info>,
-  #[account(
-    mut,
-    seeds = [b"pool".as_ref()],
-    bump,
-  )]
-  pub pool: AccountInfo<'info>,
   pub system_program: Program<'info, System>
 }

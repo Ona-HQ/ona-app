@@ -1,20 +1,51 @@
 
+https://book.anchor-lang.com/anchor_references/javascript_anchor_types_reference.html
+
+
+    webpack5: true,
+    webpack: (config) => {
+      config.resolve.fallback = { fs: false };
+
+      return config;
+    },
+
 Mainnet Mango Program v3: mv3ekLzLbnVPNxjSKvqBpU3ZeZXPQdEC3bp5MDEBG68
 https://solanacookbook.com/integrations/mango.html#how-to-deposit-usdc-into-a-mango-account
 https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9bbf7b6dc58b939a0d64/code/mango/create-account/create-account.en.rs
 
 # TODO
 
+## v1
 - Make sure there is a way to withdraw if trader doesn't make a trade (after X amount of time)?
     e.g. Maximum 4 weeks?
-
 - Save Mango Markets Trade ID on trade when trade starts
 - Where (and how) to save profit?
 - Save traders PNL trade success
-
-- Fund a trade
+- Fund a trade (send USDC)
 - Save a user's started trades
 - Save a user's funded trades
+- Save status of trade on trade object (AWAITING_MANGO_ACCOUNT, RAISING, INITIATED_TRADE, EXECUTED_TRADE, CANCELLED_TRADE)
+  User indicates how long they raise (e.g. 24 hours)
+  After 24 hours (the funding window), there is a 7 day window for the trade to start (INITIATE_TRADE)
+  If not initiated within 7 days, the trade is finished and marked as CANCELLED_TRADE
+  If initiated within 7 days, the trade is going until the stop loss or take profit target hits, or if the trader takes profit manually
+- Integrate with Mango Markets
+
+## v2
+- Show Active Traders
+- Search trades (on asset, long/short, title, description)
+- Search users
+- Show User's Profile
+
+## done
+- Show Open Trades
+
+
+
+## Roadmap
+- Allow partial bids & asks
+- As a user, I can look up trades of other users
+- 
 
 
 https://imfeld.dev/writing/starting_with_solana_part04

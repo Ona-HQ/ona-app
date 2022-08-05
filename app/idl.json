@@ -1,0 +1,428 @@
+{
+  "version": "0.1.0",
+  "name": "tanto",
+  "instructions": [
+    {
+      "name": "createGlobals",
+      "accounts": [
+        {
+          "name": "globals",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "createTrade",
+      "accounts": [
+        {
+          "name": "trade",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "globals",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tradeOwner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "asset",
+          "type": "string"
+        },
+        {
+          "name": "direction",
+          "type": "bool"
+        },
+        {
+          "name": "chart",
+          "type": "string"
+        },
+        {
+          "name": "entryPrice",
+          "type": "i64"
+        },
+        {
+          "name": "targetPrice",
+          "type": "i64"
+        },
+        {
+          "name": "leverage",
+          "type": "u8"
+        },
+        {
+          "name": "startTime",
+          "type": "i64"
+        },
+        {
+          "name": "hoursToRaise",
+          "type": "u8"
+        },
+        {
+          "name": "fundingGoal",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "name": "createMangoAccount",
+      "accounts": [
+        {
+          "name": "mangoProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mangoGroup",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mangoAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "trade",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "createUser",
+      "accounts": [
+        {
+          "name": "userAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "globals",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "twitter",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "fundTrade",
+      "accounts": [
+        {
+          "name": "trade",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "funder",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "applicationState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "escrowWalletState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "usdcMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "walletToWithdrawFrom",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "name": "startTrade",
+      "accounts": [
+        {
+          "name": "trade",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tradeOwner",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Global",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "lastUserId",
+            "type": "u32"
+          },
+          {
+            "name": "lastTradeId",
+            "type": "u32"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Trade",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "i64"
+          },
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "asset",
+            "type": "string"
+          },
+          {
+            "name": "direction",
+            "type": "bool"
+          },
+          {
+            "name": "chart",
+            "type": "string"
+          },
+          {
+            "name": "entryPrice",
+            "type": "i64"
+          },
+          {
+            "name": "targetPrice",
+            "type": "i64"
+          },
+          {
+            "name": "leverage",
+            "type": "u8"
+          },
+          {
+            "name": "startTime",
+            "type": "i64"
+          },
+          {
+            "name": "hoursToRaise",
+            "type": "u8"
+          },
+          {
+            "name": "fundingGoal",
+            "type": "i64"
+          },
+          {
+            "name": "fundings",
+            "type": {
+              "vec": {
+                "defined": "Funding"
+              }
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "User",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "i64"
+          },
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "twitter",
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "type": "string"
+          },
+          {
+            "name": "successPercentage",
+            "type": "u8"
+          },
+          {
+            "name": "startedTrades",
+            "type": {
+              "vec": "i64"
+            }
+          },
+          {
+            "name": "fundedTrades",
+            "type": {
+              "vec": "i64"
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "Funding",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "i64"
+          },
+          {
+            "name": "user",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Asset",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Sol"
+          },
+          {
+            "name": "Btc"
+          },
+          {
+            "name": "Eth"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "GlobalsAlreadyInitiated"
+    },
+    {
+      "code": 6001,
+      "name": "NotUsersTrade"
+    },
+    {
+      "code": 6002,
+      "name": "WithdrawProhibited"
+    },
+    {
+      "code": 6003,
+      "name": "NotAProgram"
+    }
+  ]
+}
