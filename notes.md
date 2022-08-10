@@ -13,7 +13,6 @@ https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9b
 - Settle Fees + Settle PnL (https://explorer.solana.com/tx/5y5HzrjfonmeVSmBEZf2dd34LgerPont1agngVrUMydjtVUkn92HGXcFWZQ14RF8kiSTT77Ykg9HNbrYmWeLk5n6?cluster=devnet)
 
 ## Doing
-- Landing page
 
 
 ## Done
@@ -38,6 +37,7 @@ https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9b
 - Allow to cancel perp orders for trade account (when situation has changed and perhaps when you wanna market sell?)
 - Logo
 - Welcome Modal
+- Landing page
 
 ## Roadmap
 - Partial bids & asks
