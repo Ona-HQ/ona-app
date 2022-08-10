@@ -1,39 +1,35 @@
-use crate::errors::TantoError;
 use anchor_lang::prelude::*;
-use num_derive::*;
-use num_traits::*;
 
 #[account]
 pub struct Trade {
-  pub id: i64,
-  owner: Pubkey,
+  pub id: u64,
+  pub owner: Pubkey,
   pub title: String,
   description: String,
   asset: String,
-  direction: bool, // true is long, false is short
+  pub direction: bool, // true is long, false is short
   chart: String, // TradingView URL
-  entry_price: i64,
-  target_price: i64,
-  leverage: u8,
+  chart_image_url: String,
+  pub entry_price: i64,
+  pub target_price: i64,
+  pub leverage: u8,
   start_time: i64, // Unix Timestamp
   hours_to_raise: u8,
-  funding_goal: i64,
-  fundings: Vec<Funding>,
-  trade_status: TradeStatus,
+  funding_goal: u64,
+  pub state: TradeState,
+  pub total_funding: u64,
+  pub created_at: i64,
   pub deposit_mint: Pubkey,
+  pub perp_market: Pubkey,
   pub bump: u8
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
-pub struct Funding {
-  amount: i64,
-  user: Pubkey,
-}
-
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq, Eq)]
-pub enum TradeStatus {
+pub enum TradeState {
   AwaitingMangoAccount,
-  Raising,
+  Funding,
+  FundingComplete,
+  FundingDeposited,
   InitiatedTrade,
   FinishedTrade,
   CancelledTrade
@@ -49,32 +45,70 @@ pub enum Asset {
 impl Trade {
   pub fn create_trade(
     &mut self,
-    owner: Pubkey, title: String, description: String, asset: String, direction: bool,
-    chart: String, entry_price: i64, target_price: i64, leverage: u8, start_time: i64,
-    hours_to_raise: u8, funding_goal: i64, deposit_mint: Pubkey, bump: u8
+    id: u64, owner: Pubkey, title: String, description: String, asset: String, direction: bool,
+    chart: String, chart_image_url: String, entry_price: i64, target_price: i64, leverage: u8, start_time: i64,
+    hours_to_raise: u8, funding_goal: u64, deposit_mint: Pubkey, perp_market: Pubkey, bump: u8
   ) -> Result<()> {
-    let now_ts = Clock::get().unwrap().unix_timestamp;
-
+    self.id = id;
     self.owner = owner;
     self.title = title;
     self.description = description;
     self.asset = asset;
     self.direction = direction;
     self.chart = chart;
+    self.chart_image_url = chart_image_url;
     self.entry_price = entry_price;
     self.target_price = target_price;
     self.leverage = leverage;
     self.start_time = start_time;
     self.hours_to_raise = hours_to_raise;
     self.funding_goal = funding_goal;
-    self.trade_status = TradeStatus::AwaitingMangoAccount;
+    self.total_funding = 0;
+    self.created_at = Clock::get().unwrap().unix_timestamp;
+    self.state = TradeState::AwaitingMangoAccount;
     self.deposit_mint = deposit_mint;
+    self.perp_market = perp_market;
     self.bump = bump;
 
     Ok(())
   }
 
-  pub fn fund_trade(funder: Pubkey, amount: i64) -> Result<()> {
+  pub fn is_funding_allowed(&self) -> bool {
+    self.state == TradeState::Funding
+  }
+
+  pub fn token_amount(&self) -> i64 {
+    if self.leverage > 1 {
+      return self.leverage as i64 * self.total_funding as i64 / self.entry_price
+    } else {
+      return self.total_funding as i64 / self.entry_price
+    }
+  }
+
+  pub fn entry_usdc_amount(&self) -> i64 {
+    return self.token_amount() * self.entry_price as i64
+  }
+
+  pub fn target_usdc_amount(&self) -> i64 {
+    return self.token_amount() * self.target_price as i64
+  }
+
+  pub fn add_funding(&mut self, amount: u64) -> Result<()> {
+    self.total_funding += amount;
+    if self.total_funding >= self.funding_goal {
+      self.state = TradeState::FundingComplete;
+    }
+    Ok(())
+  }
+
+  pub fn set_state(&mut self, state: TradeState) -> Result<()> {
+    self.state = state;
+    Ok(())
+  }
+
+  pub fn initiate_trade(&mut self) -> Result<()> {
+    self.state = TradeState::InitiatedTrade;
+
     Ok(())
   }
 }

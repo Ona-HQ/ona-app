@@ -1,13 +1,7 @@
 
+
 https://book.anchor-lang.com/anchor_references/javascript_anchor_types_reference.html
 
-
-    webpack5: true,
-    webpack: (config) => {
-      config.resolve.fallback = { fs: false };
-
-      return config;
-    },
 
 Mainnet Mango Program v3: mv3ekLzLbnVPNxjSKvqBpU3ZeZXPQdEC3bp5MDEBG68
 https://solanacookbook.com/integrations/mango.html#how-to-deposit-usdc-into-a-mango-account
@@ -15,37 +9,47 @@ https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9b
 
 # TODO
 
-## v1
-- Make sure there is a way to withdraw if trader doesn't make a trade (after X amount of time)?
-    e.g. Maximum 4 weeks?
-- Save Mango Markets Trade ID on trade when trade starts
-- Where (and how) to save profit?
-- Save traders PNL trade success
+## v1.1
+- Settle Fees + Settle PnL (https://explorer.solana.com/tx/5y5HzrjfonmeVSmBEZf2dd34LgerPont1agngVrUMydjtVUkn92HGXcFWZQ14RF8kiSTT77Ykg9HNbrYmWeLk5n6?cluster=devnet)
+
+## Doing
+- Landing page
+
+
+## Done
+- Show Open Trades
+- Where (and how) to save profit? Goes on trade PDA
 - Fund a trade (send USDC)
 - Save a user's started trades
 - Save a user's funded trades
+- Show User's Profile
+- Link to Mango trade account when trade is running
+- Make sure there is a way to withdraw if trader doesn't make a trade (after X amount of time)? e.g. Maximum 4 weeks?
+- Save Mango Markets Trade ID on trade when trade starts
+- Cancel a perp order
+- Calculate funding percentage
+- Save traders PNL trade success
 - Save status of trade on trade object (AWAITING_MANGO_ACCOUNT, RAISING, INITIATED_TRADE, EXECUTED_TRADE, CANCELLED_TRADE)
   User indicates how long they raise (e.g. 24 hours)
   After 24 hours (the funding window), there is a 7 day window for the trade to start (INITIATE_TRADE)
   If not initiated within 7 days, the trade is finished and marked as CANCELLED_TRADE
   If initiated within 7 days, the trade is going until the stop loss or take profit target hits, or if the trader takes profit manually
-- Integrate with Mango Markets
-
-## v2
-- Show Active Traders
-- Search trades (on asset, long/short, title, description)
-- Search users
-- Show User's Profile
-
-## done
-- Show Open Trades
-
-
+- Withdraw from Mango account (when trade successfully executed, need to be executed manually)
+- Allow to cancel perp orders for trade account (when situation has changed and perhaps when you wanna market sell?)
+- Logo
+- Welcome Modal
 
 ## Roadmap
-- Allow partial bids & asks
-- As a user, I can look up trades of other users
-- 
+- Partial bids & asks
+- Reputation system
+- Ona Token
+- Look up trades of other users
+- Show most successful traders (leaderboard)
+- Search trades (on asset, long/short, title, description)
+- Search users
+- Register on-chain the perp markets
+- Verified Accounts
+- Continuous Funds for Verified Accounts
 
 
 https://imfeld.dev/writing/starting_with_solana_part04
@@ -73,5 +77,15 @@ https://explorer.solana.com/tx/4NsGDMkxGpU2bA6KrTGZ3JPFvt4zyhGu3tmhtqc3UWZz9R2V4
 4. Settle?
 https://explorer.solana.com/tx/38AGa7ThXfsDxMvJTwFqXPYzkxSozrvt8zs2MtYyWGk9Dh5Ag8dhbCtt2qShq9FTvuHqzru1q7bAmq7ytuhxj9wo?cluster=devnet
 
-5. Place Perp Order2
+5. Place Perp Order2 (Buy)
 https://explorer.solana.com/tx/8GcKzeMarcz3H4zp1QR7R1xpTzJEXP8LYQ1CqamsXsSq9t6Mrf4ZvCcnwMhjessNnyv69hTy5S4CFtKuFdE9KeH?cluster=devnet
+
+Settle PnL
+https://explorer.solana.com/tx/vTJFrGhQW7LHL7mf8LrEMWSqtRHmM1dq8Lc6KBKzC3S99F8Mwtyygt7T2JGJWSkt6jxibaRBYMFEGzE3EeLATZe?cluster=devnet
+https://explorer.solana.com/tx/56HKDciKCWCGcvzRogUe35tQwjyygrJBHUcGwKseysNoRwe5YiiMx78cgGCDKHMcnR4SThT8LCwBVjDP82AnLLvo?cluster=devnet
+
+6. Place Perp Order2 (Sell)
+https://explorer.solana.com/tx/4xEUkWtJHvxXatDdLHcgTBzKrVMRiA6rZG7bifbzPaZMn2v1zXpm9qgvy3ecViEeAFSAgdbN4tMndbzVmv7J2FbX?cluster=devnet
+
+
+

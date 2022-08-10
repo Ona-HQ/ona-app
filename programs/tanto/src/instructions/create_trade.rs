@@ -1,12 +1,12 @@
 use crate::errors::TantoError;
 use crate::state::trade::*;
+use crate::state::user::*;
 use crate::state::global::*;
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Mint};
 
 pub mod usdc_token {
   #[cfg(feature = "development")]
-  anchor_lang::declare_id!("8FRFC6MoGGkMFQwngccyu69VnYbzykGeez7ignHVAFSN");
+  anchor_lang::declare_id!("S6PfGEDTqmG3fxYATnXKhRLGNk1XExikwFfJXTrm38o");
   #[cfg(not(feature = "development"))]
   anchor_lang::declare_id!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
 }
@@ -14,23 +14,27 @@ pub mod usdc_token {
 pub fn create_trade(
   ctx: Context<CreateTrade>,
   title: String, description: String, asset: String, direction: bool,
-  chart: String, entry_price: i64, target_price: i64, leverage: u8,
-  start_time: i64, hours_to_raise: u8, funding_goal: i64, deposit_mint: Pubkey
+  chart: String, chart_image_url: String, entry_price: i64, target_price: i64,
+  leverage: u8, start_time: i64, hours_to_raise: u8, funding_goal: u64,
+  deposit_mint: Pubkey, perp_market: Pubkey
 ) -> Result<()> {
   let trade = &mut ctx.accounts.trade;
   let globals = &mut ctx.accounts.globals;
-  globals.last_trade_id += 1;
+  let user_account = &mut ctx.accounts.user_account;
 
   require_gt!(leverage, 0);
-  require_keys_eq!(trade.deposit_mint, anchor_spl::mint::USDC, TantoError::WrongTokenMint);
+  // anchor_spl::mint::USDC
+  require_keys_eq!(deposit_mint, usdc_token::ID, TantoError::WrongTokenMint);
 
   trade.create_trade(
+    globals.last_trade_id,
     ctx.accounts.trade_owner.key(),
     title,
     description,
     asset,
     direction,
     chart,
+    chart_image_url,
     entry_price.try_into().unwrap(),
     target_price.try_into().unwrap(),
     leverage,
@@ -38,21 +42,33 @@ pub fn create_trade(
     hours_to_raise,
     funding_goal,
     deposit_mint,
+    perp_market,
     *ctx.bumps.get("trade").unwrap()
-  )
+  )?;
+  user_account.add_started_trade(trade.key())?;
+
+  globals.last_trade_id += 1;
+  Ok(())
 }
 
-// &[globals.last_trade_id.try_into().unwrap()
 #[derive(Accounts)]
 pub struct CreateTrade<'info> {
   // TODO: make space dynamic
-  #[account(init, payer = trade_owner, space = 10000, seeds = [b"new-trade".as_ref(), trade_owner.key().as_ref()], bump)]
+  #[account(
+    init,
+    payer = trade_owner,
+    space = 1000,
+    seeds = [b"new-trade".as_ref(), trade_owner.key().as_ref(), &globals.last_trade_id.to_be_bytes().as_ref()],
+    bump
+  )]
   pub trade: Account<'info, Trade>,
 
   #[account(mut, seeds = [b"globals".as_ref()], bump = globals.bump)]
   pub globals: Account<'info, Global>,
 
-  pub deposit_mint: Account<'info, Mint>,
+  // TODO check if user_account.owner is equal to trade owner
+  #[account(mut, seeds = [b"user-account".as_ref(), trade_owner.key().as_ref()], bump = user_account.bump)]
+  pub user_account: Box<Account<'info, User>>,
 
   #[account(mut)]
   pub trade_owner: Signer<'info>,

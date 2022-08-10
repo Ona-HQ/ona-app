@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [authenticated, setAuthenticated] = useState(false);
 
   return (
-    <ChakraProvider>  
+    <ChakraProvider>
       <AutoConnectProvider>
         <WalletContextProvider>
           <Head>

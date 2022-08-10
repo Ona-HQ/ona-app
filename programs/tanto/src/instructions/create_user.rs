@@ -6,17 +6,19 @@ pub fn create_user(ctx: Context<CreateUser>, twitter: String) -> Result<()> {
   let user_account = &mut ctx.accounts.user_account;
   let globals = &mut ctx.accounts.globals;
 
-  globals.last_user_id += 1;
   user_account.create_user(
     globals.last_user_id.try_into().unwrap(),
     twitter,
     *ctx.bumps.get("user_account").unwrap()
-  )
+  )?;
+  globals.last_user_id += 1;
+
+  Ok(())
 }
 
 #[derive(Accounts)]
 pub struct CreateUser<'info> {
-  #[account(init, payer = user, space = 10000, seeds = [b"user-account".as_ref(), user.key().as_ref()], bump)] // TODO: make space dynamic
+  #[account(init, payer = user, space = 1000, seeds = [b"user-account".as_ref(), user.key().as_ref()], bump)] // TODO: make space dynamic
   pub user_account: Account<'info, User>,
   #[account(mut, seeds = [b"globals".as_ref()], bump = globals.bump)]
   pub globals: Account<'info, Global>,

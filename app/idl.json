@@ -37,6 +37,11 @@
           "isSigner": false
         },
         {
+          "name": "userAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "tradeOwner",
           "isMut": true,
           "isSigner": true
@@ -69,6 +74,10 @@
           "type": "string"
         },
         {
+          "name": "chartImageUrl",
+          "type": "string"
+        },
+        {
           "name": "entryPrice",
           "type": "i64"
         },
@@ -90,7 +99,15 @@
         },
         {
           "name": "fundingGoal",
-          "type": "i64"
+          "type": "u64"
+        },
+        {
+          "name": "depositMint",
+          "type": "publicKey"
+        },
+        {
+          "name": "perpMarket",
+          "type": "publicKey"
         }
       ]
     },
@@ -114,6 +131,387 @@
         },
         {
           "name": "trade",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "depositMangoAccount",
+      "accounts": [
+        {
+          "name": "mangoProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mangoGroup",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mangoAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "trade",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mangoCache",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rootBank",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nodeBank",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ownerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "withdrawFromMangoAccount",
+      "accounts": [
+        {
+          "name": "mangoProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mangoGroup",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mangoAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "trade",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mangoCache",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rootBank",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nodeBank",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "usdcMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ownerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "placePerpOrder2",
+      "accounts": [
+        {
+          "name": "mangoProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mangoGroup",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mangoAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "trade",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mangoCache",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "perpMarket",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bids",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "asks",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventQueue",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "cancelPerpOrder",
+      "accounts": [
+        {
+          "name": "mangoProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mangoGroup",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mangoAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "trade",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "perpMarket",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bids",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "asks",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "withdrawFunds",
+      "accounts": [
+        {
+          "name": "trade",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "senderWallet",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tradeFunding",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "usdcMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "settleTrade",
+      "accounts": [
+        {
+          "name": "mangoProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mangoGroup",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mangoAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "trade",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mangoCache",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "perpMarket",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bids",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "asks",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventQueue",
           "isMut": true,
           "isSigner": false
         },
@@ -170,28 +568,38 @@
           "isSigner": false
         },
         {
-          "name": "funder",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "applicationState",
+          "name": "tradeFunding",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "escrowWalletState",
+          "name": "vault",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "usdcMint",
-          "isMut": false,
           "isSigner": false
         },
         {
           "name": "walletToWithdrawFrom",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "usdcMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -213,25 +621,9 @@
       "args": [
         {
           "name": "amount",
-          "type": "i64"
+          "type": "u64"
         }
       ]
-    },
-    {
-      "name": "startTrade",
-      "accounts": [
-        {
-          "name": "trade",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tradeOwner",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": []
     }
   ],
   "accounts": [
@@ -241,16 +633,49 @@
         "kind": "struct",
         "fields": [
           {
+            "name": "admin",
+            "type": "publicKey"
+          },
+          {
             "name": "lastUserId",
-            "type": "u32"
+            "type": "u64"
           },
           {
             "name": "lastTradeId",
-            "type": "u32"
+            "type": "u64"
           },
           {
             "name": "bump",
             "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TradeFunding",
+      "docs": [
+        "A trade funding account is a user account attached to a trade, it will do bookkeeping",
+        "for owner, and additionally other metadata e.g. how much funds did the user",
+        "deposit in trade etc."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "trade",
+            "type": "publicKey"
+          },
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
           }
         ]
       }
@@ -262,7 +687,7 @@
         "fields": [
           {
             "name": "id",
-            "type": "i64"
+            "type": "u64"
           },
           {
             "name": "owner",
@@ -289,6 +714,10 @@
             "type": "string"
           },
           {
+            "name": "chartImageUrl",
+            "type": "string"
+          },
+          {
             "name": "entryPrice",
             "type": "i64"
           },
@@ -310,15 +739,29 @@
           },
           {
             "name": "fundingGoal",
+            "type": "u64"
+          },
+          {
+            "name": "state",
+            "type": {
+              "defined": "TradeState"
+            }
+          },
+          {
+            "name": "totalFunding",
+            "type": "u64"
+          },
+          {
+            "name": "createdAt",
             "type": "i64"
           },
           {
-            "name": "fundings",
-            "type": {
-              "vec": {
-                "defined": "Funding"
-              }
-            }
+            "name": "depositMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "perpMarket",
+            "type": "publicKey"
           },
           {
             "name": "bump",
@@ -334,11 +777,15 @@
         "fields": [
           {
             "name": "id",
-            "type": "i64"
+            "type": "u64"
           },
           {
             "name": "owner",
             "type": "publicKey"
+          },
+          {
+            "name": "verified",
+            "type": "bool"
           },
           {
             "name": "twitter",
@@ -349,19 +796,23 @@
             "type": "string"
           },
           {
-            "name": "successPercentage",
+            "name": "failedTrades",
+            "type": "u8"
+          },
+          {
+            "name": "successfulTrades",
             "type": "u8"
           },
           {
             "name": "startedTrades",
             "type": {
-              "vec": "i64"
+              "vec": "publicKey"
             }
           },
           {
             "name": "fundedTrades",
             "type": {
-              "vec": "i64"
+              "vec": "publicKey"
             }
           },
           {
@@ -374,17 +825,30 @@
   ],
   "types": [
     {
-      "name": "Funding",
+      "name": "TradeState",
       "type": {
-        "kind": "struct",
-        "fields": [
+        "kind": "enum",
+        "variants": [
           {
-            "name": "amount",
-            "type": "i64"
+            "name": "AwaitingMangoAccount"
           },
           {
-            "name": "user",
-            "type": "publicKey"
+            "name": "Funding"
+          },
+          {
+            "name": "FundingComplete"
+          },
+          {
+            "name": "FundingDeposited"
+          },
+          {
+            "name": "InitiatedTrade"
+          },
+          {
+            "name": "FinishedTrade"
+          },
+          {
+            "name": "CancelledTrade"
           }
         ]
       }
@@ -414,15 +878,22 @@
     },
     {
       "code": 6001,
-      "name": "NotUsersTrade"
+      "name": "WrongTokenMint"
     },
     {
       "code": 6002,
-      "name": "WithdrawProhibited"
+      "name": "FundingNotAllowed"
     },
     {
       "code": 6003,
-      "name": "NotAProgram"
+      "name": "WithdrawProhibited"
+    },
+    {
+      "code": 6004,
+      "name": "WrongUser"
     }
-  ]
+  ],
+  "metadata": {
+    "address": "68i2xmU7bZUjXLzkjXrmXc1SgmjHX2jKKKCGKrTB6aAE"
+  }
 }

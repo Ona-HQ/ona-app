@@ -9,7 +9,8 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const endpoint = 'http://localhost:8899'; // TODO: make dynamic with .env file: web3.clusterApiUrl('devnet')
 	const wallets = [
 		new walletAdapterWallets.PhantomWalletAdapter(),
-		new walletAdapterWallets.SolflareWalletAdapter()
+		new walletAdapterWallets.SolflareWalletAdapter(),
+    new walletAdapterWallets.SolletWalletAdapter()
 	]
 
 	return (

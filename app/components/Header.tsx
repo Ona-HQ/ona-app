@@ -1,4 +1,4 @@
-import { FC, Fragment } from 'react'
+import { FC, Fragment, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Popover, Transition } from '@headlessui/react'
 import clsx from 'clsx'
@@ -8,8 +8,11 @@ import { Button } from '../components/Button'
 import { Container } from '../components/Container'
 import { Logo } from '../components/Logo'
 import { NavLink } from '../components/NavLink'
-import { User } from '../models/User'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
+import { Utils } from '../common/Utils'
+import { PublicKey } from '@solana/web3.js';
+import { utils } from '@project-serum/anchor';
+import { CreateUserAccountModal } from '../components/CreateUserAccountModal'
 
 function MobileNavLink({ href, children }) {
   return (
@@ -90,41 +93,74 @@ function MobileNavigation() {
 }
 
 export const Header: FC = ({ authenticated }) => {
+  const [showCreateAccountModal, setShowCreateAccountModal] = useState(false);
+  const [hasAccount, setHasAccount] = useState(false);
+  const [account, setAccount] = useState({});
+
   const anchorWallet = useAnchorWallet();
-  const createAccount = async () => {
+  const utf8 = utils.bytes.utf8;
+
+  useEffect(() => {
     if (!anchorWallet) {
       return;
     }
 
-    const tx = await User.createUser(anchorWallet);
-    tx.rpc();
-  };
+    const tryLoadUser = async () => {
+      const program = Utils.getProgram(anchorWallet);
+
+      const [userPDA] = await PublicKey.findProgramAddress(
+        [utf8.encode('user-account'), anchorWallet.publicKey.toBuffer()],
+        program.programId,
+      );
+      try {
+        const account = await program.account.user.fetch(userPDA);
+        if (account && account.id) {
+          setAccount(account);
+          setHasAccount(true);
+        }
+      } catch (e) {
+        setHasAccount(false);
+      }
+    };
+
+    tryLoadUser();
+  }, [anchorWallet, authenticated]);
 
   return (
     <header className="py-10">
+      {showCreateAccountModal ? (
+        <CreateUserAccountModal anchorWallet={anchorWallet} setShowCreateAccountModal={setShowCreateAccountModal} />
+      ) : null}
       <Container>
         <nav className="relative z-50 flex justify-between">
           <div className="flex items-center">
             <Link href="/" aria-label="Home">
-              <Logo className="h-10 w-auto" />
+              <a><Logo className="h-10 w-auto" /></a>
             </Link>
-            Tanto
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
             {authenticated ? (
               <div className="hidden md:block">
-                <Link href="/trades/new">
-                  <a className="mr-4 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Start new trade
-                  </a>
-                </Link>
-                <button
-                  type="button"
-                  className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={() => createAccount()}
-                >
-                  Create an account
-                </button>
+                {hasAccount ? ( 
+                  <Link href="/trades/new">
+                    <a className="mr-4 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                      Start new trade
+                    </a>
+                  </Link>
+                ) : null}
+                {!hasAccount ? (
+                  <button
+                    type="button"
+                    className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    onClick={() => setShowCreateAccountModal(true)}
+                  >
+                    Create an account
+                  </button>
+                ) : (
+                  <span>
+                    Logged in as <Link href="/profile"><a className="text-indigo-700 font-bold">@{account.twitter}</a></Link>
+                  </span>
+                )}
               </div>
             ) : null}
             <span>

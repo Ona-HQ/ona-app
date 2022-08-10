@@ -1,47 +1,62 @@
+use crate::errors::TantoError::WithdrawProhibited;
 use crate::state::trade::*;
-use crate::state::global::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke_signed;
+use anchor_spl::token::{Token,TokenAccount};
 
 pub fn deposit_mango_account(
-  ctx: Context<DepositMangoAccount>
+  ctx: Context<DepositMangoAccount>,
+  amount: u64
 ) -> Result<()> {
-  let payer = ctx.accounts.payer.key();
+  let trade = &mut ctx.accounts.trade;
+  let owner = trade.owner.key();
+  require_keys_eq!(ctx.accounts.payer.key(), owner, WithdrawProhibited);
+
+  let id = trade.id.to_be_bytes();
+
   let seeds = &[
     b"new-trade".as_ref(),
-    payer.as_ref(),
-    &[ctx.accounts.trade.bump],
+    owner.as_ref(),
+    &id.as_ref(),    
+    &[trade.bump],
   ];
 
-  // TODO
-  // invoke_signed(
-  //   &mango::instruction::create_mango_account(
-  //     // &mango_program_id::ID,//ctx.accounts.mango_program.key,
-  //     &ctx.accounts.mango_program.key(),
-  //     &ctx.accounts.mango_group.key(),
-  //     &ctx.accounts.mango_account.key(),
-  //     &ctx.accounts.trade.key(),
-  //     &ctx.accounts.system_program.key(),
-  //     &ctx.accounts.payer.key(),
-  //     1 // TODO: make dynamic
-  //   ).unwrap(),
-  //   &[
-  //     ctx.accounts.mango_program.to_account_info().clone(),
-  //     ctx.accounts.mango_group.to_account_info().clone(),
-  //     ctx.accounts.mango_account.to_account_info().clone(),
-  //     ctx.accounts.trade.to_account_info().clone(),
-  //     ctx.accounts.system_program.to_account_info().clone(),
-  //     ctx.accounts.payer.to_account_info().clone(),
-  //   ],
-  //   &[&seeds[..]],
-  // )?;
+  invoke_signed(
+    &mango::instruction::deposit(
+      &ctx.accounts.mango_program.key(),
+      &ctx.accounts.mango_group.key(),
+      &ctx.accounts.mango_account.key(),
+      &trade.key(),
+      &ctx.accounts.mango_cache.key(),
+      &ctx.accounts.root_bank.key(),
+      &ctx.accounts.node_bank.key(),
+      &ctx.accounts.vault.key(),
+      &ctx.accounts.owner_token_account.key(),
+      amount
+    ).unwrap(),
+    &[
+      ctx.accounts.mango_program.to_account_info().clone(),
+      ctx.accounts.mango_group.to_account_info().clone(),
+      ctx.accounts.mango_account.to_account_info().clone(),
+      trade.to_account_info().clone(),
+      ctx.accounts.mango_cache.to_account_info().clone(),
+      ctx.accounts.root_bank.to_account_info().clone(),
+      ctx.accounts.node_bank.to_account_info().clone(),
+      ctx.accounts.vault.to_account_info().clone(),
+      ctx.accounts.owner_token_account.to_account_info().clone(),
+      ctx.accounts.system_program.to_account_info().clone(),
+      ctx.accounts.token_program.to_account_info().clone(),
+    ],
+    &[&seeds[..]],
+  )?;
+  trade.set_state(TradeState::FundingDeposited)?;
 
   Ok(())
 }
 
 #[derive(Accounts)]
 pub struct DepositMangoAccount<'info> {
-  ///CHECK: checked in mango program
+  /// CHECK: checked in mango program
   pub mango_program: UncheckedAccount<'info>,
   /// CHECK: Mango CPI
   #[account(mut)]
@@ -49,20 +64,26 @@ pub struct DepositMangoAccount<'info> {
   /// CHECK: Mango CPI
   #[account(mut)]
   pub mango_account: UncheckedAccount<'info>,
-  #[account(mut, seeds = [b"new-trade".as_ref(), payer.key().as_ref()], bump = trade.bump)]
+  #[account(mut, seeds = [b"new-trade".as_ref(), trade.owner.key().as_ref(), &trade.id.to_be_bytes().as_ref()], bump = trade.bump)]
   pub trade: Account<'info, Trade>,
 
   /// CHECK: Mango CPI
+  #[account(mut)]
   pub mango_cache: AccountInfo<'info>,
   /// CHECK: Mango CPI
+  #[account(mut)]
   pub root_bank: AccountInfo<'info>,
   /// CHECK: Mango CPI
+  #[account(mut)]
   pub node_bank: AccountInfo<'info>,
   /// CHECK: Mango CPI
+  #[account(mut)]
   pub vault: AccountInfo<'info>,
   /// CHECK: Mango CPI
-  pub owner_token_account: AccountInfo<'info>,
+  #[account(mut)]
+  pub owner_token_account: Account<'info, TokenAccount>,
   pub system_program: Program<'info, System>,
   #[account(mut)]
   pub payer: Signer<'info>,
+  pub token_program: Program<'info, Token>,
 }
