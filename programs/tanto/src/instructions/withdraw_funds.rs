@@ -15,7 +15,11 @@ pub fn withdraw_funds(
   let now = Clock::get().unwrap().unix_timestamp;
   let diff = now - trade.created_at;
   // withdrawal can happen when either 4 weeks without a trade have passed, or if the trade is over
-  require!(trade.state == TradeState::FinishedTrade || diff >= 2306768, TantoError::WithdrawProhibited);
+  require!(
+    trade.state == TradeState::FinishedTrade ||
+    trade.state == TradeState::WithdrawnFunds || diff >= 2306768,
+    TantoError::WithdrawProhibited
+  );
   require_keys_eq!(ctx.accounts.usdc_mint.key(), usdc_token::ID, TantoError::WrongTokenMint);
 
   if diff >= 2306768

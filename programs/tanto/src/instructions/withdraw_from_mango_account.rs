@@ -18,7 +18,12 @@ pub fn withdraw_from_mango_account(
   let time_past = diff >= 2306768;
   // TODO: enforce this. require_keys_eq!(ctx.accounts.owner_token_account.authority, owner, TantoError::WithdrawProhibited);
   // 4 weeks past and anyone can withdraw as well
-  require!(trade.state == TradeState::FinishedTrade || trade.state == TradeState::CancelledTrade || time_past, TantoError::WithdrawProhibited);
+  require!(
+    trade.state == TradeState::InitiatedTrade ||
+    trade.state == TradeState::FinishedTrade ||
+    trade.state == TradeState::CancelledTrade || time_past,
+    TantoError::WithdrawProhibited
+  );
 
   let remaining_accounts_iter = ctx.remaining_accounts.iter();
   let mut open_orders = vec![Pubkey::default(); MAX_PAIRS];

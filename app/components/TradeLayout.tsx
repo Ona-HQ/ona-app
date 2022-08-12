@@ -365,7 +365,7 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
             {trade.state['finishedTrade'] && trade.owner.toBase58() === anchorWallet.publicKey.toBase58() ? (
               <div className="w-full">
                 <button onClick={() => withdraw()} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
-                  Withdraw Funds from Mango
+                  Finish Trade & Withdraw Funds from Mango
                 </button>
               </div>
             ) : null}
