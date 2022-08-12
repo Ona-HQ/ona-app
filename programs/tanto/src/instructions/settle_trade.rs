@@ -5,7 +5,6 @@ pub fn settle_trade(
   _ctx: Context<SettleTrade>,
   _percentage: u8
 ) -> Result<()> {
-  // TODO: Settle PnL/Fees on Mango
   Ok(())
 }
 

@@ -10,6 +10,7 @@ pub use deposit_mango_account::*;
 pub use withdraw_from_mango_account::*;
 pub use place_perp_order_mango::*;
 pub use cancel_perp_order_mango::*;
+pub use market_close_perp_orders_mango::*;
 
 pub use create_user::*;
 
@@ -26,5 +27,6 @@ pub mod deposit_mango_account;
 pub mod withdraw_from_mango_account;
 pub mod place_perp_order_mango;
 pub mod cancel_perp_order_mango;
+pub mod market_close_perp_orders_mango;
 
 pub mod create_user;

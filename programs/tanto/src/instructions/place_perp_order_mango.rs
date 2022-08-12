@@ -3,8 +3,6 @@ use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke_signed;
 use mango::matching::Side;
 use mango::matching::OrderType;
-use mango::matching::ExpiryType;
-use mango::state::MAX_PAIRS;
 
 pub fn place_perp_order2(
   ctx: Context<PlacePerpOrder2>
@@ -19,20 +17,12 @@ pub fn place_perp_order2(
     &[trade.bump],
   ];
 
-  let max_base_quantity = trade.token_amount();
-  let max_quote_quantity = trade.entry_usdc_amount(); // the total amount (in USDC)
   let order_type = OrderType::Limit;
-  let expiry_timestamp = Some(0); // Send 0 if you want to ignore time in force
-  let limit = 255; // maximum number of FillEvents before terminating
-
-  let mut remaining_accounts_iter = ctx.remaining_accounts.iter();
-  let _referral = remaining_accounts_iter.next();
-  let mut open_orders = vec![Pubkey::default(); MAX_PAIRS];
-  remaining_accounts_iter.for_each(|ai| open_orders.push(*ai.key));
+  let mango_spot_open_orders = ["11111111111111111111111111111111".parse().unwrap(); 15];
 
   // Place limit order with the entry price
   invoke_signed(
-    &mango::instruction::place_perp_order2(
+    &mango::instruction::place_perp_order(
       &ctx.accounts.mango_program.key(),
       &ctx.accounts.mango_group.key(),
       &ctx.accounts.mango_account.key(),
@@ -42,18 +32,14 @@ pub fn place_perp_order2(
       &ctx.accounts.bids.key(),
       &ctx.accounts.asks.key(),
       &ctx.accounts.event_queue.key(),
-      None,
-      open_orders.as_slice(),
+      Some(&trade.owner.key()), // referral
+      &mango_spot_open_orders,
       if trade.direction { Side::Bid } else { Side::Ask },
-      trade.entry_price,
-      max_base_quantity,
-      max_quote_quantity,
+      trade.calculate_mango_entry_price(), // price divided by 100, meaning '38' is $0.38. 3800 is $38
+      trade.calculate_mango_entry_lots(), // size, 10 equals 0.1. in other words if you bid 38 with size 0.1, you open a bid of $0.038
       trade.id, // client order ID
       order_type,
       false, // no reduce only
-      expiry_timestamp,
-      limit,
-      ExpiryType::Relative,
     ).unwrap(),
     &[
       ctx.accounts.mango_group.to_account_info().clone(),
@@ -70,43 +56,43 @@ pub fn place_perp_order2(
   )?;
 
   // Place limit order with the target price
-  invoke_signed(
-    &mango::instruction::place_perp_order2(
-      &ctx.accounts.mango_program.key(),
-      &ctx.accounts.mango_group.key(),
-      &ctx.accounts.mango_account.key(),
-      &trade.key(),
-      &ctx.accounts.mango_cache.key(),
-      &ctx.accounts.perp_market.key(),
-      &ctx.accounts.bids.key(),
-      &ctx.accounts.asks.key(),
-      &ctx.accounts.event_queue.key(),
-      None,
-      open_orders.as_slice(),
-      if trade.direction { Side::Ask } else { Side::Bid }, // use other (inverted) side
-      trade.target_price,
-      max_base_quantity,
-      trade.target_usdc_amount(),
-      trade.id + 1, // client order ID
-      order_type,
-      true, // reduce_only
-      expiry_timestamp,
-      limit,
-      ExpiryType::Relative,
-    ).unwrap(),
-    &[
-      ctx.accounts.mango_group.to_account_info().clone(),
-      ctx.accounts.mango_account.to_account_info().clone(),
-      trade.to_account_info().clone(),
-      ctx.accounts.mango_cache.to_account_info().clone(),
-      ctx.accounts.perp_market.to_account_info().clone(),
-      ctx.accounts.bids.to_account_info().clone(),
-      ctx.accounts.asks.to_account_info().clone(),
-      ctx.accounts.event_queue.to_account_info().clone(),
-      ctx.accounts.payer.to_account_info().clone()
-    ],
-    &[&seeds[..]],
-  )?;
+  // invoke_signed(
+  //   &mango::instruction::place_perp_order2(
+  //     &ctx.accounts.mango_program.key(),
+  //     &ctx.accounts.mango_group.key(),
+  //     &ctx.accounts.mango_account.key(),
+  //     &trade.key(),
+  //     &ctx.accounts.mango_cache.key(),
+  //     &ctx.accounts.perp_market.key(),
+  //     &ctx.accounts.bids.key(),
+  //     &ctx.accounts.asks.key(),
+  //     &ctx.accounts.event_queue.key(),
+  //     None,
+  //     open_orders.as_slice(),
+  //     if trade.direction { Side::Ask } else { Side::Bid }, // use other (inverted) side
+  //     trade.target_price,
+  //     max_base_quantity,
+  //     trade.target_usdc_amount(),
+  //     trade.id + 1, // client order ID
+  //     order_type,
+  //     true, // reduce_only
+  //     expiry_timestamp,
+  //     limit,
+  //     ExpiryType::Relative,
+  //   ).unwrap(),
+  //   &[
+  //     ctx.accounts.mango_group.to_account_info().clone(),
+  //     ctx.accounts.mango_account.to_account_info().clone(),
+  //     trade.to_account_info().clone(),
+  //     ctx.accounts.mango_cache.to_account_info().clone(),
+  //     ctx.accounts.perp_market.to_account_info().clone(),
+  //     ctx.accounts.bids.to_account_info().clone(),
+  //     ctx.accounts.asks.to_account_info().clone(),
+  //     ctx.accounts.event_queue.to_account_info().clone(),
+  //     ctx.accounts.payer.to_account_info().clone()
+  //   ],
+  //   &[&seeds[..]],
+  // )?;
   trade.initiate_trade()?;
 
   Ok(())
@@ -123,7 +109,7 @@ pub struct PlacePerpOrder2<'info> {
   /// CHECK: Mango CPI
   #[account(mut)]
   pub mango_account: UncheckedAccount<'info>,
-  #[account(mut, seeds = [b"new-trade".as_ref(), trade.owner.key().as_ref()], bump = trade.bump)]
+  #[account(mut, seeds = [b"new-trade".as_ref(), trade.owner.key().as_ref(), &trade.id.to_be_bytes().as_ref()], bump = trade.bump)]
   pub trade: Account<'info, Trade>,
   /// CHECK: Mango CPI
   pub mango_cache: AccountInfo<'info>,

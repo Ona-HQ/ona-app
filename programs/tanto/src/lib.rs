@@ -5,7 +5,7 @@ pub mod errors;
 pub mod instructions;
 pub mod state;
 
-declare_id!("68i2xmU7bZUjXLzkjXrmXc1SgmjHX2jKKKCGKrTB6aAE");
+declare_id!("7cww21Ze4xT6nh2B7RUQ7w25zeXdf2h6DgS2M9wjU2Pp");
 
 #[program]
 pub mod tanto {
@@ -51,6 +51,10 @@ pub mod tanto {
   // Cancel the trade on the Mango side
   pub fn cancel_perp_order(ctx: Context<CancelPerpOrder>) -> Result<()> {
     instructions::cancel_perp_order_mango::cancel_perp_order(ctx)
+  }
+
+  pub fn market_close_perp_orders_mango(ctx: Context<MarketClosePerpOrders>) -> Result<()> {
+    instructions::market_close_perp_orders_mango::market_close_perp_orders_mango(ctx)
   }
 
   // When the user does not initiate a trade within 4 weeks after funding window

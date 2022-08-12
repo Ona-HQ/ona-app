@@ -17,11 +17,12 @@ pub fn fund_trade(
   let trade = &mut ctx.accounts.trade;
   let user_account = &mut ctx.accounts.user_account;
   let trade_funding = &mut ctx.accounts.trade_funding;
+  // TODO: require!(!trade_funding.has_funded, TantoError::TradeAlreadyFunded);
   require!(trade.is_funding_allowed(), TantoError::FundingNotAllowed);
   require_keys_eq!(ctx.accounts.usdc_mint.key(), usdc_token::ID, TantoError::WrongTokenMint);
 
   trade.add_funding(amount)?;
-  trade_funding.add_funding(amount)?;
+  trade_funding.add_funding(trade.key(), ctx.accounts.payer.key(), amount, *ctx.bumps.get("trade_funding").unwrap())?;
   user_account.add_funded_trade(trade.key())?;
 
   token::transfer(ctx.accounts.transfer_ctx(), amount)?;  
@@ -62,15 +63,14 @@ pub struct FundTrade<'info> {
   )]
   pub vault: Box<Account<'info, TokenAccount>>, // wallet to deposit into (escrow vault)
 
-  // TODO: LOOK AT THIS - CANNOT BE INITIATED ON THE FLY WITH INIT?!!
   #[account(
-    mut,
-    constraint = wallet_to_withdraw_from.owner == payer.key(),
-    constraint = wallet_to_withdraw_from.mint == usdc_mint.key()
+    init_if_needed,
+    payer = payer,
+    associated_token::authority = payer,
+    associated_token::mint = usdc_mint,
   )]
-  pub wallet_to_withdraw_from: Account<'info, TokenAccount>, // wallet to withdraw from (deposit token)
+  pub wallet_to_withdraw_from: Box<Account<'info, TokenAccount>>, // wallet to withdraw from (deposit token)
 
-  // TODO check if user_account.owner is equal to trade owner
   #[account(mut, seeds = [b"user-account".as_ref(), payer.key().as_ref()], bump = user_account.bump)]
   pub user_account: Box<Account<'info, User>>,
 

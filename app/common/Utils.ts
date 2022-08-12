@@ -9,7 +9,7 @@ import {
 import idl from '../idl.json';
 import { IDS, MangoClient, Config, getMarketByBaseSymbolAndKind } from "@blockworks-foundation/mango-client";
 
-const getConfirmation = async (tx: string) => {
+const getConfirmation = async (connection: Connection, tx: string) => {
   const result = await connection.getSignatureStatus(tx, {
     searchTransactionHistory: true,
   });
@@ -18,6 +18,21 @@ const getConfirmation = async (tx: string) => {
 };
 
 export class Utils {
+  static getConnection() {
+    const environment = process.env.NEXT_PUBLIC_NETWORK;
+    let network;
+    if (environment === 'localnet') {
+      network = "http://127.0.0.1:8899";
+    } else if (environment === 'devnet') {
+      network = clusterApiUrl('devnet');
+    } else {
+      network = clusterApiUrl('mainnet-beta');
+    }
+
+    console.log(network);
+    return new Connection(network, "processed");
+  }
+
   static getProgram(anchorWallet) {
     const environment = process.env.NEXT_PUBLIC_NETWORK;
     let network;
@@ -80,8 +95,9 @@ export class Utils {
     return [groupConfig, clusterData, clusterUrl];
   }
 
-  static getMangoPerpMarket = async (clusterUrl, clusterData, groupConfig, asset) => {
+  static getMangoPerpMarket = async (asset) => {
     console.log('Looking for perp market config for', asset);
+    const [groupConfig, clusterData, clusterUrl] = Utils.getMangoGroupConfig('devnet.2');
     const mangoGroupKey = groupConfig.publicKey;
     const mangoConnection = new Connection(clusterUrl, 'singleGossip');
     const mangoProgramIdPk = new PublicKey(clusterData.mangoProgramId);

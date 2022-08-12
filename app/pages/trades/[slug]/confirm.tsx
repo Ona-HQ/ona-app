@@ -109,7 +109,7 @@ const Confirm: NextPage = () => {
                       </span>
                     </span>
                     <span className="mt-0.5 ml-4 min-w-0 flex flex-col">
-                      <span className="text-xs font-semibold text-gray-500 tracking-wide uppercase">Confirmation</span>
+                      <span className="text-xs font-semibold text-gray-500 tracking-wide uppercase">Congratulations!</span>
                       <span className="text-sm font-medium text-gray-500">An overview of your trade and a way to share on socials</span>
                     </span>
                   </span>

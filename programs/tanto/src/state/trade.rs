@@ -32,6 +32,7 @@ pub enum TradeState {
   FundingDeposited,
   InitiatedTrade,
   FinishedTrade,
+  WithdrawnFunds,
   CancelledTrade
 }
 
@@ -75,6 +76,19 @@ impl Trade {
 
   pub fn is_funding_allowed(&self) -> bool {
     self.state == TradeState::Funding
+  }
+
+  pub fn calculate_mango_entry_price(&self) -> i64 {
+    // we save the price with 6 decimals
+    // e.g. $38 is saved as 38,000,000
+    // mango markets expects 2 decimals
+    return self.entry_price / 10000;
+  }
+
+  pub fn calculate_mango_entry_lots(&self) -> i64 {
+    // 100 equals one lot, usually
+    // lots * entry price = total funding
+    return self.leverage as i64 * (self.total_funding as i64 / 10000 as i64) / (self.entry_price / 1000000);
   }
 
   pub fn token_amount(&self) -> i64 {

@@ -37,7 +37,7 @@ export const FinishedTrades: FC = ({ hasAccount }) => {
   }, [anchorWallet])
 
   return (
-    <Container className="pb-16 pt-4 h-full">  
+    <Container className="pb-16 pt-4 min-h-full">  
       {isLoading ? (
         <div className="flex flex-wrap">
           <Loading />

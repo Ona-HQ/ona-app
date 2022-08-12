@@ -58,9 +58,9 @@ export function Hero() {
                     </a>
                   </div>
 
-                  <div className="ml-12 -my-1">
+                  <div className="ml-12 -my-2">
                     <a className="hover:opacity-70 transition duration-200 ease-in-out" href="https://mango.markets/">
-                      <img className="" src="https://mango.markets/logo_serum.svg" alt="Mango Markets" />
+                      <img className="w-96" src="Logo_Mango.svg" alt="Mango Markets" />
                     </a>
                   </div>
                 </div>
@@ -157,7 +157,88 @@ export function Hero() {
           </div>
 
           <hr className="mt-12"/>
-        </div> 
+        </div>
+
+        <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 mt-8">
+          <span className="mb-12 block text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">Roadmap</span>
+          <section className="md:flex">
+            <h2 className="pl-7 text-sm leading-6 text-slate-500 md:w-1/4 md:pl-0 md:pr-12 md:text-right">
+              <a href="#2022-08">August, 2022</a>
+            </h2>
+            <div className="relative pt-2 pl-7 md:w-3/4 md:pt-0 md:pl-12 pb-16">
+              <div className="absolute bottom-0 left-0 w-px bg-slate-200 -top-3 md:top-2.5"></div>
+              <div className="absolute -top-[1.0625rem] -left-1 h-[0.5625rem] w-[0.5625rem] rounded-full border-2 border-slate-300 bg-white md:top-[0.4375rem]"></div>
+              <div className="max-w-none prose-h3:mb-4 prose-h3:text-base prose-h3:leading-6 prose-sm prose prose-slate prose-a:font-semibold prose-a:text-sky-500 hover:prose-a:text-sky-600">
+                <p>We are participating in <a href="https://solana.com/summercamp">Solana's Summer Camp Hackathon</a>! If you like what we're doing, consider giving us a shout-out on Twitter :)</p>
+
+                <h3 className="font-semibold mt-4 mb-2">New additions</h3>
+                <ul className="list-disc">
+                  <li>Devnet Launch with Mango integration on SOL, BTC and ETH</li>
+                  <li>Improve search on users and trades</li>
+                  <li>Community Discord & Twitter Launch</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+          <section className="md:flex">
+            <h2 className="pl-7 text-sm leading-6 text-slate-500 md:w-1/4 md:pl-0 md:pr-12 md:text-right">
+              <a href="#2022-09">September, 2022</a>
+            </h2>
+            <div className="relative pt-2 pl-7 md:w-3/4 md:pt-0 md:pl-12 pb-16">
+              <div className="absolute bottom-0 left-0 w-px bg-slate-200 -top-6 md:top-0"></div>
+              <div className="absolute -top-[1.0625rem] -left-1 h-[0.5625rem] w-[0.5625rem] rounded-full border-2 border-slate-300 bg-white md:top-[0.4375rem]"></div>
+              <div className="max-w-none prose-h3:mb-4 prose-h3:text-base prose-h3:leading-6 prose-sm prose prose-slate prose-a:font-semibold prose-a:text-sky-500 hover:prose-a:text-sky-600">
+                <h3 className="font-semibold mb-2">New additions</h3>
+                <ul className="list-disc">
+                  <li>Mainnet Launch</li>
+                  <li>Reputation System for traders</li>
+                  <li>Governance Token Launch with token rewards for investors and traders</li>
+                  <li>Verified Accounts</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+          <section className="md:flex">
+            <h2 className="pl-7 text-sm leading-6 text-slate-500 md:w-1/4 md:pl-0 md:pr-12 md:text-right">
+              <a href="#2022-q4">Q4 2022</a>
+            </h2>
+            <div className="relative pt-2 pl-7 md:w-3/4 md:pt-0 md:pl-12 pb-16">
+              <div className="absolute bottom-0 left-0 w-px bg-slate-200 -top-6 md:top-0"></div>
+                <div className="absolute -top-[1.0625rem] -left-1 h-[0.5625rem] w-[0.5625rem] rounded-full border-2 border-slate-300 bg-white md:top-[0.4375rem]"></div>
+                <div className="max-w-none prose-h3:mb-4 prose-h3:text-base prose-h3:leading-6 prose-sm prose prose-slate prose-a:font-semibold prose-a:text-sky-500 hover:prose-a:text-sky-600">
+                <h3 className="font-semibold mb-2">New additions</h3>
+                <ul className="list-disc">
+                  <li>Public Leaderboards</li>
+                  <li>Twitter and Discord Bot</li>
+                  <li>Partial bids & asks</li>
+                  <li>Follow Users</li>
+                  <li>Comment threads for Trades</li>
+                  <li>Like and Follow Trades</li>
+                  <li>Seed Round Raised</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+          <section className="md:flex">
+            <h2 className="pl-7 text-sm leading-6 text-slate-500 md:w-1/4 md:pl-0 md:pr-12 md:text-right">
+              <a href="#2023">2023</a>
+            </h2>
+            <div className="relative pt-2 pl-7 md:w-3/4 md:pt-0 md:pl-12 pb-16">
+              <div className="absolute bottom-0 left-0 w-px bg-slate-200 -top-6 md:top-0"></div>
+                <div className="absolute -top-[1.0625rem] -left-1 h-[0.5625rem] w-[0.5625rem] rounded-full border-2 border-slate-300 bg-white md:top-[0.4375rem]"></div>
+                <div className="max-w-none prose-h3:mb-4 prose-h3:text-base prose-h3:leading-6 prose-sm prose prose-slate prose-a:font-semibold prose-a:text-sky-500 hover:prose-a:text-sky-600">
+                <h3 className="font-semibold mb-2">New additions</h3>
+                <ul className="list-disc">
+                  <li>Continuous Funds for Verified Accounts</li>
+                  <li>Drift.Trade integration</li>
+                  <li>Vault Analytics</li>
+                  <li>Trading Competitions (Gamefied trading)</li>
+                  <li>Spot & Options Trading</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        </div>
       </Container>
 
       <section className="relative overflow-hidden bg-phantom py-32 mb-12">

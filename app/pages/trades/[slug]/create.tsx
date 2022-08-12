@@ -48,7 +48,7 @@ const Create: NextPage = () => {
     setTxId(tx);
     tx.rpc().then((response) => {
       if (Utils.getTransactionStatus(response)) {
-        router.push('/trades/${slug}/confirm');
+        router.push(`/trades/${slug}/confirm`);
       } else {
         console.log('show bad error!');
       }

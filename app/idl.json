@@ -262,7 +262,7 @@
           "isSigner": false
         },
         {
-          "name": "usdcMint",
+          "name": "signer",
           "isMut": true,
           "isSigner": false
         },
@@ -395,6 +395,67 @@
         },
         {
           "name": "asks",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "marketClosePerpOrdersMango",
+      "accounts": [
+        {
+          "name": "mangoProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mangoGroup",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mangoAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "trade",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mangoCache",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "perpMarket",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bids",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "asks",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventQueue",
           "isMut": true,
           "isSigner": false
         },
@@ -674,6 +735,10 @@
             "type": "publicKey"
           },
           {
+            "name": "hasFunded",
+            "type": "bool"
+          },
+          {
             "name": "amount",
             "type": "u64"
           }
@@ -891,9 +956,13 @@
     {
       "code": 6004,
       "name": "WrongUser"
+    },
+    {
+      "code": 6005,
+      "name": "TradeAlreadyFunded"
     }
   ],
   "metadata": {
-    "address": "68i2xmU7bZUjXLzkjXrmXc1SgmjHX2jKKKCGKrTB6aAE"
+    "address": "7cww21Ze4xT6nh2B7RUQ7w25zeXdf2h6DgS2M9wjU2Pp"
   }
 }

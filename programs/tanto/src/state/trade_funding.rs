@@ -9,12 +9,18 @@ pub struct TradeFunding {
   pub bump: u8,
   pub trade: Pubkey,
   pub owner: Pubkey,
-  pub amount: u64
+  pub has_funded: bool,
+  pub amount: u64,
 }
 
 impl TradeFunding {
-  pub fn add_funding(&mut self, amount: u64) -> Result<()> {
+  pub fn add_funding(&mut self, trade: Pubkey, owner: Pubkey, amount: u64, bump: u8) -> Result<()> {
+    self.trade = trade;
+    self.owner = owner;
     self.amount = amount;
+    self.bump = bump;
+    self.has_funded = true;
+
     Ok(())
   }
 

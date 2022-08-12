@@ -6,7 +6,7 @@ use anchor_lang::prelude::*;
 
 pub mod usdc_token {
   #[cfg(feature = "development")]
-  anchor_lang::declare_id!("S6PfGEDTqmG3fxYATnXKhRLGNk1XExikwFfJXTrm38o");
+  anchor_lang::declare_id!("8FRFC6MoGGkMFQwngccyu69VnYbzykGeez7ignHVAFSN");
   #[cfg(not(feature = "development"))]
   anchor_lang::declare_id!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
 }
@@ -35,8 +35,8 @@ pub fn create_trade(
     direction,
     chart,
     chart_image_url,
-    entry_price.try_into().unwrap(),
-    target_price.try_into().unwrap(),
+    entry_price,
+    target_price,
     leverage,
     start_time,
     hours_to_raise,

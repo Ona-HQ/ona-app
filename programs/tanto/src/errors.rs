@@ -6,5 +6,6 @@ pub enum TantoError {
   WrongTokenMint,
   FundingNotAllowed,
   WithdrawProhibited,
-  WrongUser
+  WrongUser,
+  TradeAlreadyFunded
 }

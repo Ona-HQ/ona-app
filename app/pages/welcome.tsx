@@ -58,7 +58,7 @@ const Welcome: NextPage = () => {
               <span className="mt-2 block text-xl text-center leading-8 font-bold text-gray-500">the easiest way to invest in the best trade ideas.</span>
             </h1>
             <p className="mt-8 text-xl text-gray-500 leading-8">
-              Tanto allows users to Create or Invest in short-term single trades, typically scalp or swing trades, which take days up to weeks.
+              Tanto allows users to create or invest in short-term single trades, typically scalp or swing trades, which take days up to weeks.
             </p>
             <p className="mt-8 text-xl text-gray-500 leading-8">
               Every now and then you discover an amazing trading opportunity.

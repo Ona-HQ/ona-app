@@ -1,4 +1,20 @@
 
+Account: CS1WoBF2DcUmvMawgPJW5zbDx79uyfjTsxRJByvrfrR3
+TradePDA: FqtxusU7TtsdTFLWYWhwA2GvQ3jRxa3zq2bYsmJvwSXg
+
+
+
+Useful links:
+https://solanacookbook.com/integrations/mango.html#how-to-create-a-mango-account
+https://github.com/solana-developers/solana-cookbook/pull/299/files
+https://github.com/blockworks-foundation/mango-client-v3/blob/main/src/ids.json
+
+ENV backup
+NEXT_PUBLIC_NETWORK=localnet
+NEXT_PUBLIC_ANCHOR_WALLET=secret
+NEXT_PUBLIC_PROGRAM_ID=68i2xmU7bZUjXLzkjXrmXc1SgmjHX2jKKKCGKrTB6aAE
+NEXT_PUBLIC_USDC_MINT=S6PfGEDTqmG3fxYATnXKhRLGNk1XExikwFfJXTrm38o
+
 
 https://book.anchor-lang.com/anchor_references/javascript_anchor_types_reference.html
 
@@ -8,6 +24,11 @@ https://solanacookbook.com/integrations/mango.html#how-to-deposit-usdc-into-a-ma
 https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9bbf7b6dc58b939a0d64/code/mango/create-account/create-account.en.rs
 
 # TODO
+- Fix fund trade TX (.rpc is not a function?)
+- Fix cancel TX as a user
+- Show error messages to user
+- How does a trade end? (FinishedTrade state)
+- Roadmap
 
 ## v1.1
 - Settle Fees + Settle PnL (https://explorer.solana.com/tx/5y5HzrjfonmeVSmBEZf2dd34LgerPont1agngVrUMydjtVUkn92HGXcFWZQ14RF8kiSTT77Ykg9HNbrYmWeLk5n6?cluster=devnet)
@@ -38,6 +59,8 @@ https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9b
 - Logo
 - Welcome Modal
 - Landing page
+- Fix view Mango account
+- Fix creating account redirect
 
 ## Roadmap
 - Partial bids & asks
@@ -46,10 +69,15 @@ https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9b
 - Look up trades of other users
 - Show most successful traders (leaderboard)
 - Search trades (on asset, long/short, title, description)
+- Follow users
 - Search users
 - Register on-chain the perp markets
 - Verified Accounts
 - Continuous Funds for Verified Accounts
+- Comments on trades
+- Like/follow trades
+- Drift.trade integration
+- Vault Analytics
 
 
 https://imfeld.dev/writing/starting_with_solana_part04
