@@ -22,7 +22,7 @@ export function Hero() {
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white" />
         </div>
 
-        <div className="lg:grid lg:grid-cols-12 lg:gap-8">
+        <div className="grid lg:grid-cols-12 grid-cols-1 lg:gap-8">
           <div className="px-2 ml-6 sm:pr-6 sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left lg:flex lg:my-24 z-10">
             <div>
               <h1 className="mx-auto max-w-4xl font-display text-6xl font-medium tracking-tight text-slate-900 sm:text-6xl">
@@ -36,13 +36,15 @@ export function Hero() {
                   >
                     <path d="M203.371.916c-26.013-2.078-76.686 1.963-124.73 9.946L67.3 12.749C35.421 18.062 18.2 21.766 6.004 25.934 1.244 27.561.828 27.778.874 28.61c.07 1.214.828 1.121 9.595-1.176 9.072-2.377 17.15-3.92 39.246-7.496C123.565 7.986 157.869 4.492 195.942 5.046c7.461.108 19.25 1.696 19.17 2.582-.107 1.183-7.874 4.31-25.75 10.366-21.992 7.45-35.43 12.534-36.701 13.884-2.173 2.308-.202 4.407 4.442 4.734 2.654.187 3.263.157 15.593-.78 35.401-2.686 57.944-3.488 88.365-3.143 46.327.526 75.721 2.23 130.788 7.584 19.787 1.924 20.814 1.98 24.557 1.332l.066-.011c1.201-.203 1.53-1.825.399-2.335-2.911-1.31-4.893-1.604-22.048-3.261-57.509-5.556-87.871-7.36-132.059-7.842-23.239-.254-33.617-.116-50.627.674-11.629.54-42.371 2.494-46.696 2.967-2.359.259 8.133-3.625 26.504-9.81 23.239-7.825 27.934-10.149 28.304-14.005.417-4.348-3.529-6-16.878-7.066Z" />
                   </svg>
-                  <span className="relative">trade, together</span>
+                  <span className="relative break-all lg:break-normal">
+                    trade, together
+                  </span>
                 </span>{' '}
               </h1>
               <p className="mx-auto mt-6 max-w-2xl text-lg tracking-tight font-bold text-slate-700">
                 Fund the best trades with friends.
               </p>
-              <div className="mt-10 flex gap-x-6">
+              <div className="mt-10 flex gap-x-6 sm:items-center sm:justify-center lg:justify-start">
                 <WalletMultiButton children={ 'Launch Tanto' }/>
                 <a href="#more" className="ml-4 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Learn more
@@ -50,18 +52,20 @@ export function Hero() {
               </div>
 
               <div className="mt-5 w-full sm:mx-auto sm:max-w-lg lg:ml-0 md:w-1/2 sm:w-1/2">
-                <p className="mt-16 py-4 text-sm text-phantom text-opacity-50 uppercase tracking-wide font-bold sm:mt-16">Powered by</p>
-                <div className="grid grid-cols-2">
-                  <div className="">
-                    <a className="hover:opacity-70 transition duration-200 ease-in-out" href="https://solana.com/">
-                      <img className="" src="solanaLogo.png" alt="Solana" />
-                    </a>
-                  </div>
+                <div className="hidden sm:block">
+                  <p className="mt-16 py-4 text-sm text-phantom text-opacity-50 uppercase tracking-wide font-bold sm:mt-16">Powered by</p>
+                  <div className="grid grid-cols-2">
+                    <div className="">
+                      <a className="hover:opacity-70 transition duration-200 ease-in-out" href="https://solana.com/">
+                        <img className="" src="solanaLogo.png" alt="Solana" />
+                      </a>
+                    </div>
 
-                  <div className="ml-12 -my-2">
-                    <a className="hover:opacity-70 transition duration-200 ease-in-out" href="https://mango.markets/">
-                      <img className="w-96" src="Logo_Mango.svg" alt="Mango Markets" />
-                    </a>
+                    <div className="ml-12 -my-2">
+                      <a className="hover:opacity-70 transition duration-200 ease-in-out" href="https://mango.markets/">
+                        <img className="w-96" src="Logo_Mango.svg" alt="Mango Markets" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -70,7 +74,7 @@ export function Hero() {
 
           <div className="mt-16 sm:mt-24 mt- lg:-mt-20 lg:col-span-6">
             <div className="z-10 relative pl-4 -mr-40 sm:mx-auto sm:max-w-3xl sm:px-0 lg:max-w-none lg:h-full">
-              <img className="lg:h-750 lg:w-auto lg:max-w-none opacity-0 transform translate-y-40" src="preview2.png" alt="" style={{transform: 'translate(0px, 0px)', opacity: '1'}} />
+              <img className="lg:h-750 lg:w-auto lg:max-w-none opacity-0 transform translate-y-40" src="trade_preview_cut.png" alt="" style={{transform: 'translate(0px, 0px)', opacity: '1'}} />
             </div>
           </div>
         </div>

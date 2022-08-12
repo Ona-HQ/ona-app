@@ -9,18 +9,26 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FundTradeModal } from '../components/FundTradeModal'
 import { MangoClient } from "@blockworks-foundation/mango-client";
+import { TxStatus } from '../components/TxStatus'
 
 export const TradeLayout: FC = ({ trade, publicKey, view }) => {
-  const startTime = new Date(1000 * parseInt(trade.createdAt.toString(), 10));
-  const percentageFunded = 100 * parseFloat(trade.totalFunding) / parseFloat(trade.fundingGoal);
-  const minPercentage = Math.max(5, percentageFunded);
-  const router = useRouter()
+  const router = useRouter();
 
+  // const [trade, setTrade] = useState(tradeObject);
   const [showFundModal, setShowFundModal] = useState(false);
   const [hasFundedTrade, setHasFundedTrade] = useState(false);
   const [account, setAccount] = useState({});
   const [totalTrades, setTotalTrades] = useState(0);
+
+  const startTime = new Date(1000 * parseInt(trade.createdAt.toString(), 10));
+  const percentageFunded = 100 * parseFloat(trade.totalFunding) / parseFloat(trade.fundingGoal);
+  const minPercentage = Math.max(5, percentageFunded);
+
+  // const [startTime, setStartTime] = useState(new Date());
+  // const [percentageFunded, setPercentageFunded] = useState(0);
+  // const [minPercentage, setMinPercentage] = useState(5);
   const [tradeSuccessPercentage, setTradeSuccessPercentage] = useState();
+
   const [tradePDA, setTradePDA] = useState('');
   const [userPDA, setUserPDA] = useState('');
   const [mangoAccount, setMangoAccount] = useState('');
@@ -29,6 +37,16 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
 
   const anchorWallet = useAnchorWallet();
   const utf8 = utils.bytes.utf8;
+
+  const reloadTrade = async () => {
+    if (!anchorWallet) {
+      return;
+    }
+
+    const program = Utils.getProgram(anchorWallet);
+    const newTrade = await program.account.trade.fetch(publicKey);
+    trade = newTrade;
+  };
 
   useEffect(() => {
     if (!anchorWallet) {
@@ -196,7 +214,18 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
   return (
     <>
       {showFundModal ? (
-        <FundTradeModal anchorWallet={anchorWallet} trade={trade} userPDA={userPDA} setShowFundModal={setShowFundModal} setTxId={setTxId} />
+        <FundTradeModal
+          anchorWallet={anchorWallet}
+          trade={trade}
+          userPDA={userPDA}
+          setShowFundModal={setShowFundModal}
+          setTxId={setTxId}
+          reloadTrade={reloadTrade}
+        />
+      ) : null}
+
+      {txId ? (
+        <TxStatus txId={txId} />
       ) : null}
 
       <div className="wrapper pt-10 px-8 flex flex-col border dark:border-0 mb-12 mr-4">

@@ -116,21 +116,20 @@ export class Trade {
     if (senderATA.instruction) instructions.push(senderATA.instruction);
     if (instructions.length === 0) instructions = undefined;
 
-    return program.rpc.fundTrade(new BN(amount * 1000000), {
-      accounts: {
-        trade: tradePDA,
-        tradeFunding: fundingPDA,
-        vault: recipientATA,
-        walletToWithdrawFrom: senderATA,
-        userAccount: userPDA,
-        payer: anchorWallet.publicKey,
-        usdcMint: mint,
-        systemProgram: SystemProgram.programId,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        rent: anchorWeb3.SYSVAR_RENT_PUBKEY,
-        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID
-      },
-      instructions
-    });
+    return program.methods.fundTrade(
+      new BN(amount * 1000000)
+    ).accounts({
+      trade: tradePDA,
+      tradeFunding: fundingPDA,
+      vault: recipientATA,
+      walletToWithdrawFrom: senderATA,
+      userAccount: userPDA,
+      payer: anchorWallet.publicKey,
+      usdcMint: mint,
+      systemProgram: SystemProgram.programId,
+      tokenProgram: TOKEN_PROGRAM_ID,
+      rent: anchorWeb3.SYSVAR_RENT_PUBKEY,
+      associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID
+    }, instructions);
   }
 }
