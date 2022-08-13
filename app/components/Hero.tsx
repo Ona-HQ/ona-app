@@ -261,7 +261,7 @@ export function Hero() {
           <p className="mt-4 text-lg tracking-tight text-white">
             Read our documentation on Gitbook!
           </p>
-          <a href="#" target="_blank" className="ml-4 mt-8 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          <a href="https://docs.ona.so" target="_blank" className="ml-4 mt-8 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             Read docs
           </a>
         </div>

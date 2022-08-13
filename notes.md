@@ -26,12 +26,10 @@ https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9b
 # TODO
 - Fix cancel TX as a user
 - Show error messages to user
-- How does a trade end? (FinishedTrade state)
 - Monitize trade as trade manager
 - Twitter Thread
 - Demo video
-
-## v1.1
+- How does a trade end? (FinishedTrade state)
 - Settle Fees + Settle PnL (https://explorer.solana.com/tx/5y5HzrjfonmeVSmBEZf2dd34LgerPont1agngVrUMydjtVUkn92HGXcFWZQ14RF8kiSTT77Ykg9HNbrYmWeLk5n6?cluster=devnet)
 
 ## Doing
