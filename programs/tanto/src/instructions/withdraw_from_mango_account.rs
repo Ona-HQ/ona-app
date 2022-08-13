@@ -15,13 +15,14 @@ pub fn withdraw_from_mango_account(
   let owner = trade.owner.key();
   let now = Clock::get().unwrap().unix_timestamp;
   let diff = now - trade.created_at;
-  let time_past = diff >= 2306768;
+  let time_past = diff >= 1153384;
   // TODO: enforce this. require_keys_eq!(ctx.accounts.owner_token_account.authority, owner, OnaError::WithdrawProhibited);
-  // 4 weeks past and anyone can withdraw as well
+  // 2 weeks past and anyone can withdraw as well
   require!(
     trade.state == TradeState::InitiatedTrade ||
     trade.state == TradeState::FinishedTrade ||
-    trade.state == TradeState::CancelledTrade || time_past,
+    trade.state == TradeState::CancelledTrade ||
+    time_past,
     OnaError::WithdrawProhibited
   );
 

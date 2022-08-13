@@ -1,13 +1,11 @@
 
-Account: CS1WoBF2DcUmvMawgPJW5zbDx79uyfjTsxRJByvrfrR3
-TradePDA: FqtxusU7TtsdTFLWYWhwA2GvQ3jRxa3zq2bYsmJvwSXg
-
 
 
 Useful links:
 https://solanacookbook.com/integrations/mango.html#how-to-create-a-mango-account
 https://github.com/solana-developers/solana-cookbook/pull/299/files
 https://github.com/blockworks-foundation/mango-client-v3/blob/main/src/ids.json
+https://github.com/coral-xyz/anchor/blob/master/ts/src/program/namespace/account.ts
 
 ENV backup
 NEXT_PUBLIC_NETWORK=localnet
@@ -24,13 +22,9 @@ https://solanacookbook.com/integrations/mango.html#how-to-deposit-usdc-into-a-ma
 https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9bbf7b6dc58b939a0d64/code/mango/create-account/create-account.en.rs
 
 # TODO
-- Fix cancel TX as a user
-- Show error messages to user
-- Monitize trade as trade manager
-- Make flow overview
-- Twitter Thread
+- Write down whole flow with trade states + How does a trade end? (FinishedTrade state)
 - Demo video
-- How does a trade end? (FinishedTrade state)
+- Twitter Thread
 - Settle Fees + Settle PnL (https://explorer.solana.com/tx/5y5HzrjfonmeVSmBEZf2dd34LgerPont1agngVrUMydjtVUkn92HGXcFWZQ14RF8kiSTT77Ykg9HNbrYmWeLk5n6?cluster=devnet)
 
 ## Doing
@@ -66,6 +60,10 @@ https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9b
 - Email Account
 - Documentation
 - Twitter Account
+- Make flow overview
+- Fix cancel TX as a user
+- Show error messages to user
+- Monitize trade as trade manager
 
 ## Roadmap
 - Partial bids & asks

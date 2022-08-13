@@ -99,12 +99,17 @@ impl Trade {
     }
   }
 
-  pub fn entry_usdc_amount(&self) -> i64 {
-    return self.token_amount() * self.entry_price as i64
-  }
-
-  pub fn target_usdc_amount(&self) -> i64 {
-    return self.token_amount() * self.target_price as i64
+  pub fn calculate_withdrawal_funds(&self, amount_investor_funded: u64, result_amount: u64) -> u64 {
+    let trade_success = result_amount > self.total_funding;
+    let percentage = amount_investor_funded / self.total_funding;
+    if trade_success {
+      // Trade was successful - subtract 10% from the profit for trade manager
+      let profit = result_amount - self.total_funding;
+      let subtracted_amount = profit as f64 * 0.10; // for trade manager
+      return (percentage * result_amount) - subtracted_amount as u64;
+    } else {
+      return percentage * result_amount;
+    }
   }
 
   pub fn add_funding(&mut self, amount: u64) -> Result<()> {

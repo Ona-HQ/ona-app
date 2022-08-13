@@ -998,6 +998,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "ona"
+version = "0.1.0"
+dependencies = [
+ "anchor-lang",
+ "anchor-spl",
+ "mango",
+ "num-derive",
+ "num-traits",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1639,17 +1650,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
-]
-
-[[package]]
-name = "ona"
-version = "0.1.0"
-dependencies = [
- "anchor-lang",
- "anchor-spl",
- "mango",
- "num-derive",
- "num-traits",
 ]
 
 [[package]]

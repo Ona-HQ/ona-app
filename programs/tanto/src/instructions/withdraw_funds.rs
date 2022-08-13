@@ -14,15 +14,16 @@ pub fn withdraw_funds(
   let trade = &mut ctx.accounts.trade;
   let now = Clock::get().unwrap().unix_timestamp;
   let diff = now - trade.created_at;
-  // withdrawal can happen when either 4 weeks without a trade have passed, or if the trade is over
+  // withdrawal can happen when either 2 weeks without a trade have passed, or if the trade is over
   require!(
     trade.state == TradeState::FinishedTrade ||
-    trade.state == TradeState::WithdrawnFunds || diff >= 2306768,
+    trade.state == TradeState::WithdrawnFunds ||
+    diff >= 1153384,
     OnaError::WithdrawProhibited
   );
   require_keys_eq!(ctx.accounts.usdc_mint.key(), usdc_token::ID, OnaError::WrongTokenMint);
 
-  if diff >= 2306768
+  if diff >= 1153384
     && trade.state != TradeState::InitiatedTrade
     && trade.state != TradeState::FinishedTrade
   {
@@ -33,9 +34,10 @@ pub fn withdraw_funds(
       let trade_funding = &mut ctx.accounts.trade_funding;
       trade_funding.withdraw_funds()?;
     }
-  } else if trade.state == TradeState::FinishedTrade {
-    let percentage = ctx.accounts.trade_funding.amount / trade.total_funding;
-    let number_of_tokens = percentage * ctx.accounts.vault.amount;
+  } else if trade.state == TradeState::WithdrawnFunds { // funds are back from the Mango account
+    let trade_funding = &ctx.accounts.trade_funding;
+    let vault = &ctx.accounts.vault;
+    let number_of_tokens = trade.calculate_withdrawal_funds(trade_funding.amount, vault.amount);
     token::transfer(ctx.accounts.transfer_ctx(), number_of_tokens)?;
     {
       let trade_funding = &mut ctx.accounts.trade_funding;
