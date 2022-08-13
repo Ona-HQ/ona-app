@@ -40,6 +40,20 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
   const anchorWallet = useAnchorWallet();
   const utf8 = utils.bytes.utf8;
 
+  const processTransaction = async (tx) => {
+    try {
+      const response = await tx.rpc();
+      setTxId(tx);
+      if (Utils.getTransactionStatus(response)) {
+        await reloadTrade();
+      } else {
+        setError({ message: 'An error with the transaction occurred. Check the transaction and try again.' });
+      }
+    } catch (error) {
+      setError(error);
+    }
+  };
+
   const reloadTrade = async () => {
     if (!anchorWallet) {
       return;
@@ -113,19 +127,8 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
       return;
     }
 
-    try {
-      const tx = await MangoAccount.create(anchorWallet, trade);
-      tx.rpc().then((response) => {
-        setTxId(tx);
-        if (Utils.getTransactionStatus(response)) {
-          router.push('/trades/${publicKey}/confirm');
-        } else {
-          console.log('show bad error!');
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const tx = await MangoAccount.create(anchorWallet, trade);
+    await processTransaction(tx);
   };
 
   const deposit = async () => {
@@ -134,17 +137,7 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     }
 
     const tx = await MangoAccount.deposit(anchorWallet, trade);
-    try {
-      const response = await tx.rpc();
-      setTxId(tx);
-      if (Utils.getTransactionStatus(response)) {
-        window.location.reload();
-      } else {
-        setError({ message: 'An error with the transaction occurred. Check the transaction and try again.' });
-      }
-    } catch (error) {
-      setError(error);
-    }
+    await processTransaction(tx);
   };
 
   const placeOrder = async () => {
@@ -153,14 +146,7 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     }
 
     const tx = await MangoAccount.placePerpOrder(anchorWallet, trade, tradePDA, mangoAccount);
-    tx.rpc().then((response) => {
-      setTxId(tx);
-      if (Utils.getTransactionStatus(response)) {
-        window.location.reload();
-      } else {
-        console.log('show bad error!');
-      }
-    });
+    await processTransaction(tx);
   }
 
   const settleTrade = async () => {
@@ -169,7 +155,7 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     }
 
     const tx = await MangoAccount.settleTrade(anchorWallet);
-    tx.rpc();
+    await processTransaction(tx);
   }
 
   const marketClose = async () => {
@@ -178,14 +164,7 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     }
 
     const tx = await MangoAccount.marketCloseOrder(anchorWallet, trade, tradePDA, mangoAccount);
-    tx.rpc().then((response) => {
-      setTxId(tx);
-      if (Utils.getTransactionStatus(response)) {
-        window.location.reload();
-      } else {
-        console.log('show bad error!');
-      }
-    });
+    await processTransaction(tx);
   }
 
   const cancel = async () => {
@@ -194,14 +173,7 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     }
 
     const tx = await MangoAccount.cancelAllOrders(anchorWallet, trade, tradePDA, mangoAccount);
-    tx.rpc().then((response) => {
-      setTxId(tx);
-      if (Utils.getTransactionStatus(response)) {
-        window.location.reload();
-      } else {
-        console.log('show bad error!');
-      }
-    });
+    await processTransaction(tx);
   }
 
   const withdraw = async () => {
@@ -210,14 +182,7 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     }
 
     const tx = await MangoAccount.withdraw(anchorWallet, trade, tradePDA, mangoAccount);
-    tx.rpc().then((response) => {
-      setTxId(tx);
-      if (Utils.getTransactionStatus(response)) {
-        window.location.reload();
-      } else {
-        console.log('show bad error!');
-      }
-    });
+    await processTransaction(tx);
   }
 
   return (
