@@ -29,7 +29,6 @@ export class Utils {
       network = clusterApiUrl('mainnet-beta');
     }
 
-    console.log(network);
     return new Connection(network, "processed");
   }
 

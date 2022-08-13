@@ -27,6 +27,7 @@ https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9b
 - Fix cancel TX as a user
 - Show error messages to user
 - Monitize trade as trade manager
+- Make flow overview
 - Twitter Thread
 - Demo video
 - How does a trade end? (FinishedTrade state)

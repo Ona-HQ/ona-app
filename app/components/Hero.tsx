@@ -52,7 +52,7 @@ export function Hero() {
                 {false ? (
                   <WalletMultiButton children={ 'Launch Ona' }/>
                 ) : (
-                  <button className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" tabindex="0" type="button">Launching Sept 2022</button>
+                  <button className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" tabIndex="0" type="button">Launching Sept 2022</button>
                 )}
                 <a href="#more" className="ml-4 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Learn more
@@ -69,7 +69,7 @@ export function Hero() {
                       </a>
                     </div>
 
-                    <div className="ml-12 -my-2">
+                    <div className="ml-12 -my-1">
                       <a className="hover:opacity-70 transition duration-200 ease-in-out" href="https://mango.markets/">
                         <img className="w-96" src="Logo_Mango.svg" alt="Mango Markets" />
                       </a>

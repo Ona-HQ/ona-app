@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { Trade } from '../models/Trade'
 import { MangoAccount } from '../models/MangoAccount'
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
+// import { WalletSignTransactionError } from '@solana/wallet-adapter-base';
 import { utils, BN } from '@project-serum/anchor';
 import { Utils } from '../common/Utils'
 import { Connection, PublicKey } from '@solana/web3.js';
@@ -33,6 +34,7 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
   const [userPDA, setUserPDA] = useState('');
   const [mangoAccount, setMangoAccount] = useState('');
   const [txId, setTxId] = useState('');
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   const anchorWallet = useAnchorWallet();
@@ -111,15 +113,19 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
       return;
     }
 
-    const tx = await MangoAccount.create(anchorWallet, trade);
-    setTxId(tx);
-    tx.rpc().then((response) => {
-      if (Utils.getTransactionStatus(response)) {
-        router.push('/trades/${publicKey}/confirm');
-      } else {
-        console.log('show bad error!');
-      }
-    });
+    try {
+      const tx = await MangoAccount.create(anchorWallet, trade);
+      tx.rpc().then((response) => {
+        setTxId(tx);
+        if (Utils.getTransactionStatus(response)) {
+          router.push('/trades/${publicKey}/confirm');
+        } else {
+          console.log('show bad error!');
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const deposit = async () => {
@@ -128,14 +134,17 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     }
 
     const tx = await MangoAccount.deposit(anchorWallet, trade);
-    setTxId(tx);
-    tx.rpc().then((response) => {
+    try {
+      const response = await tx.rpc();
+      setTxId(tx);
       if (Utils.getTransactionStatus(response)) {
         window.location.reload();
       } else {
-        console.log('show bad error!');
+        setError({ message: 'An error with the transaction occurred. Check the transaction and try again.' });
       }
-    });
+    } catch (error) {
+      setError(error);
+    }
   };
 
   const placeOrder = async () => {
@@ -144,8 +153,8 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     }
 
     const tx = await MangoAccount.placePerpOrder(anchorWallet, trade, tradePDA, mangoAccount);
-    setTxId(tx);
     tx.rpc().then((response) => {
+      setTxId(tx);
       if (Utils.getTransactionStatus(response)) {
         window.location.reload();
       } else {
@@ -169,8 +178,8 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     }
 
     const tx = await MangoAccount.marketCloseOrder(anchorWallet, trade, tradePDA, mangoAccount);
-    setTxId(tx);
     tx.rpc().then((response) => {
+      setTxId(tx);
       if (Utils.getTransactionStatus(response)) {
         window.location.reload();
       } else {
@@ -185,8 +194,8 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     }
 
     const tx = await MangoAccount.cancelAllOrders(anchorWallet, trade, tradePDA, mangoAccount);
-    setTxId(tx);
     tx.rpc().then((response) => {
+      setTxId(tx);
       if (Utils.getTransactionStatus(response)) {
         window.location.reload();
       } else {
@@ -201,8 +210,8 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     }
 
     const tx = await MangoAccount.withdraw(anchorWallet, trade, tradePDA, mangoAccount);
-    setTxId(tx);
     tx.rpc().then((response) => {
+      setTxId(tx);
       if (Utils.getTransactionStatus(response)) {
         window.location.reload();
       } else {
@@ -224,8 +233,8 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
         />
       ) : null}
 
-      {txId ? (
-        <TxStatus txId={txId} />
+      {txId || error ? (
+        <TxStatus txId={txId} error={error} setTxId={setTxId} setError={setError} />
       ) : null}
 
       <div className="wrapper pt-10 px-8 flex flex-col border dark:border-0 mb-12 mr-4">
