@@ -11,8 +11,16 @@ const nextConfig = {
     newNextLinkBehavior: true,
     images: {
       allowFutureImage: true,
+      unoptimized: true,
     },
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  images: {
+    loader: "imgix",
+    path: "/",
+  }
 }
 
 module.exports = nextConfig

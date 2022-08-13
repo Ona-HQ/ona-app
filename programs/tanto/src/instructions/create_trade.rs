@@ -1,4 +1,4 @@
-use crate::errors::TantoError;
+use crate::errors::OnaError;
 use crate::state::trade::*;
 use crate::state::user::*;
 use crate::state::global::*;
@@ -24,7 +24,7 @@ pub fn create_trade(
 
   require_gt!(leverage, 0);
   // anchor_spl::mint::USDC
-  require_keys_eq!(deposit_mint, usdc_token::ID, TantoError::WrongTokenMint);
+  require_keys_eq!(deposit_mint, usdc_token::ID, OnaError::WrongTokenMint);
 
   trade.create_trade(
     globals.last_trade_id,

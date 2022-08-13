@@ -1,5 +1,5 @@
 use crate::state::trade::*;
-use crate::errors::TantoError;
+use crate::errors::OnaError;
 use crate::create_trade::*;
 use crate::state::trade_funding::*;
 
@@ -18,9 +18,9 @@ pub fn withdraw_funds(
   require!(
     trade.state == TradeState::FinishedTrade ||
     trade.state == TradeState::WithdrawnFunds || diff >= 2306768,
-    TantoError::WithdrawProhibited
+    OnaError::WithdrawProhibited
   );
-  require_keys_eq!(ctx.accounts.usdc_mint.key(), usdc_token::ID, TantoError::WrongTokenMint);
+  require_keys_eq!(ctx.accounts.usdc_mint.key(), usdc_token::ID, OnaError::WrongTokenMint);
 
   if diff >= 2306768
     && trade.state != TradeState::InitiatedTrade

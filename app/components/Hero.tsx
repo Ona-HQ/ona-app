@@ -1,5 +1,9 @@
 import Image from 'next/image'
 
+const myLoader = ({ src, width, quality }) => {
+  return `${src}`
+}
+
 import { Button } from '../components/Button'
 import { Container } from '../components/Container'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
@@ -10,7 +14,7 @@ export function Hero() {
       <Container className="pt-20 pb-16 lg:pt-32">
         <div className="absolute inset-x-0 -top-48 -bottom-14 overflow-hidden bg-indigo-50">
           <Image
-            className=""
+            loader={myLoader}
             src="background.jpg"
             alt=""
             width={918}
@@ -45,7 +49,11 @@ export function Hero() {
                 Fund the best trades with friends.
               </p>
               <div className="mt-10 flex gap-x-6 sm:items-center sm:justify-center lg:justify-start">
-                <WalletMultiButton children={ 'Launch Tanto' }/>
+                {false ? (
+                  <WalletMultiButton children={ 'Launch Ona' }/>
+                ) : (
+                  <button className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" tabindex="0" type="button">Launching Sept 2022</button>
+                )}
                 <a href="#more" className="ml-4 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Learn more
                 </a>
@@ -115,17 +123,17 @@ export function Hero() {
             <div className="text-lg max-w-prose mx-auto">
               <h1>
                 <span className="block text-base text-center text-indigo-600 font-semibold tracking-wide uppercase">Introducing</span>
-                <span className="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">Tanto</span>
+                <span className="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">Ona</span>
                 <span className="mt-2 block text-xl text-center leading-8 font-bold text-gray-500">the easiest way to invest in the best trade ideas.</span>
               </h1>
               <p className="mt-8 text-xl text-gray-500 leading-8">
-                Tanto allows users to create or invest in short-term trades, typically scalp or swing trades, which take days up to weeks. All powered with the speed and execution of the Solana blockchain!
+                Ona allows users to create or invest in short-term trades, typically scalp or swing trades, which take days up to weeks. All powered with the speed and execution of the Solana blockchain!
               </p>
               <p className="mt-8 text-xl text-gray-500 leading-8">
                 Every now and then you discover an amazing trading opportunity.
                 Until today, all you could do in such a situation was share your trade setup with your friends and followers on Twitter, Discord or Telegram.
                 Besides trading your idea yourself, there was no way to share your opportunity directly with others or monetize it.
-                Tanto allows you to turn your trade setup into an easily investable vehicle which can be funded by the Solana community.
+                Ona allows you to turn your trade setup into an easily investable vehicle which can be funded by the Solana community.
               </p>
             </div>
           </div>
@@ -135,12 +143,12 @@ export function Hero() {
           <div className="mt-12 px-4 sm:px-6 lg:px-8">
             <div className="text-lg max-w-prose mx-auto">
               <h1>
-                <span className="block text-base text-center text-indigo-600 font-semibold tracking-wide uppercase">Tanto for Traders</span>
+                <span className="block text-base text-center text-indigo-600 font-semibold tracking-wide uppercase">Ona for Traders</span>
                 <span className="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">Earn more on your trades</span>
                 <span className="mt-2 block text-xl text-center leading-8 font-bold text-gray-500">Raise funding from the community and earn on execution.</span>
               </h1>
               <p className="mt-8 text-xl text-gray-500 leading-8 text-center">
-                With Tanto, you can quickly raise funding for your trade within hours to days and earn a performance fee of 10%. No extra costs or monthly fees required!
+                With Ona, you can quickly raise funding for your trade within hours to days and earn a performance fee of 10%. No extra costs or monthly fees required!
               </p>
             </div>
           </div>
@@ -150,12 +158,12 @@ export function Hero() {
           <div className="mt-12 px-4 sm:px-6 lg:px-8">
             <div className="text-lg max-w-prose mx-auto">
               <h1>
-                <span className="block text-base text-center text-indigo-600 font-semibold tracking-wide uppercase">Tanto for Investors</span>
+                <span className="block text-base text-center text-indigo-600 font-semibold tracking-wide uppercase">Ona for Investors</span>
                 <span className="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">Invest in the best trade ideas</span>
                 <span className="mt-2 block text-xl text-center leading-8 font-bold text-gray-500">Invest with the best traders.</span>
               </h1>
               <p className="mt-8 text-xl text-gray-500 leading-8 text-center">
-                Tanto makes it easier to invest with the best traders. No months of lock-ups. Join your favorite trades in one click. It’s all about just one trade.
+                Ona makes it easier to invest with the best traders. No months of lock-ups. Join your favorite trades in one click. It’s all about just one trade.
               </p>
             </div>
           </div>
@@ -178,7 +186,6 @@ export function Hero() {
                 <h3 className="font-semibold mt-4 mb-2">New additions</h3>
                 <ul className="list-disc">
                   <li>Devnet Launch with Mango integration on SOL, BTC and ETH</li>
-                  <li>Improve search on users and trades</li>
                   <li>Community Discord & Twitter Launch</li>
                 </ul>
               </div>
@@ -195,6 +202,7 @@ export function Hero() {
                 <h3 className="font-semibold mb-2">New additions</h3>
                 <ul className="list-disc">
                   <li>Mainnet Launch</li>
+                  <li>Improve search on users and trades</li>
                   <li>Reputation System for traders</li>
                   <li>Governance Token Launch with token rewards for investors and traders</li>
                   <li>Verified Accounts</li>

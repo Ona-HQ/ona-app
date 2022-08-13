@@ -20,7 +20,7 @@ const fs = require('fs');
 
 let provider = anchor.AnchorProvider.local("http://localhost:8899");
 anchor.setProvider(provider);
-const program = anchor.workspace.Tanto;
+const program = anchor.workspace.Ona;
 const network = "http://127.0.0.1:8899";
 const connection = new Connection(network, "processed");
 const amount = 100000;

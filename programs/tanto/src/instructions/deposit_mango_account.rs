@@ -1,4 +1,4 @@
-use crate::errors::TantoError::WithdrawProhibited;
+use crate::errors::OnaError::WithdrawProhibited;
 use crate::state::trade::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke_signed;

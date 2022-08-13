@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <AutoConnectProvider>
         <WalletContextProvider>
           <Head>
-            <title>Tanto - Trading together made easy</title>
+            <title>Ona - Trading together made easy</title>
             <meta
               name="description"
               content="Solana social trading"

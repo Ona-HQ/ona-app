@@ -2,9 +2,9 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-tanto = "7cww21Ze4xT6nh2B7RUQ7w25zeXdf2h6DgS2M9wjU2Pp"
+ona = "7cww21Ze4xT6nh2B7RUQ7w25zeXdf2h6DgS2M9wjU2Pp"
 [programs.devnet]
-tanto = "7cww21Ze4xT6nh2B7RUQ7w25zeXdf2h6DgS2M9wjU2Pp"
+ona = "7cww21Ze4xT6nh2B7RUQ7w25zeXdf2h6DgS2M9wjU2Pp"
 
 [registry]
 url = "https://api.apr.dev"

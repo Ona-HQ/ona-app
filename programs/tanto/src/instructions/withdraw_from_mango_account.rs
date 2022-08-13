@@ -1,4 +1,4 @@
-use crate::errors::TantoError;
+use crate::errors::OnaError;
 use crate::state::trade::*;
 use crate::state::user::*;
 use anchor_lang::prelude::*;
@@ -16,13 +16,13 @@ pub fn withdraw_from_mango_account(
   let now = Clock::get().unwrap().unix_timestamp;
   let diff = now - trade.created_at;
   let time_past = diff >= 2306768;
-  // TODO: enforce this. require_keys_eq!(ctx.accounts.owner_token_account.authority, owner, TantoError::WithdrawProhibited);
+  // TODO: enforce this. require_keys_eq!(ctx.accounts.owner_token_account.authority, owner, OnaError::WithdrawProhibited);
   // 4 weeks past and anyone can withdraw as well
   require!(
     trade.state == TradeState::InitiatedTrade ||
     trade.state == TradeState::FinishedTrade ||
     trade.state == TradeState::CancelledTrade || time_past,
-    TantoError::WithdrawProhibited
+    OnaError::WithdrawProhibited
   );
 
   let remaining_accounts_iter = ctx.remaining_accounts.iter();

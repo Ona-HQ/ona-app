@@ -34,7 +34,7 @@ const Home: NextPage = ({ setAuthenticated }) => {
     if (anchorWallet) {
       setAuthenticated(true);
 
-      if (!localStorage.getItem('tanto-skip-welcome')) {
+      if (!localStorage.getItem('ona-skip-welcome')) {
         getAccount();
       } else {
         setIsLoading(false);

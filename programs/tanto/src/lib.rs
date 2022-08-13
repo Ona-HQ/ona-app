@@ -8,7 +8,7 @@ pub mod state;
 declare_id!("7cww21Ze4xT6nh2B7RUQ7w25zeXdf2h6DgS2M9wjU2Pp");
 
 #[program]
-pub mod tanto {
+pub mod ona {
   use super::*;
 
   pub fn create_globals(ctx: Context<GlobalState>) -> Result<()> {

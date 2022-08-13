@@ -7,7 +7,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token;
 use anchor_spl::token::{Mint, Token, TokenAccount};
-use crate::errors::TantoError;
+use crate::errors::OnaError;
 
 // Code from https://github.com/PirosB3/SafePaySolana/blob/master/programs/safe_pay/src/lib.rs
 // https://betterprogramming.pub/using-pdas-and-spl-token-in-anchor-and-solana-df05c57ccd04
@@ -17,9 +17,9 @@ pub fn fund_trade(
   let trade = &mut ctx.accounts.trade;
   let user_account = &mut ctx.accounts.user_account;
   let trade_funding = &mut ctx.accounts.trade_funding;
-  // TODO: require!(!trade_funding.has_funded, TantoError::TradeAlreadyFunded);
-  require!(trade.is_funding_allowed(), TantoError::FundingNotAllowed);
-  require_keys_eq!(ctx.accounts.usdc_mint.key(), usdc_token::ID, TantoError::WrongTokenMint);
+  // TODO: require!(!trade_funding.has_funded, OnaError::TradeAlreadyFunded);
+  require!(trade.is_funding_allowed(), OnaError::FundingNotAllowed);
+  require_keys_eq!(ctx.accounts.usdc_mint.key(), usdc_token::ID, OnaError::WrongTokenMint);
 
   trade.add_funding(amount)?;
   trade_funding.add_funding(trade.key(), ctx.accounts.payer.key(), amount, *ctx.bumps.get("trade_funding").unwrap())?;

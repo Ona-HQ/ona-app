@@ -24,11 +24,15 @@ https://solanacookbook.com/integrations/mango.html#how-to-deposit-usdc-into-a-ma
 https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9bbf7b6dc58b939a0d64/code/mango/create-account/create-account.en.rs
 
 # TODO
-- Fix fund trade TX (.rpc is not a function?)
 - Fix cancel TX as a user
 - Show error messages to user
 - How does a trade end? (FinishedTrade state)
-- Roadmap
+- Documentation
+- Monitize trade as trade manager
+- Twitter Account
+- Email Account
+- Twitter Thread
+- Demo video
 
 ## v1.1
 - Settle Fees + Settle PnL (https://explorer.solana.com/tx/5y5HzrjfonmeVSmBEZf2dd34LgerPont1agngVrUMydjtVUkn92HGXcFWZQ14RF8kiSTT77Ykg9HNbrYmWeLk5n6?cluster=devnet)
@@ -61,6 +65,8 @@ https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9b
 - Landing page
 - Fix view Mango account
 - Fix creating account redirect
+- Roadmap
+- Fix fund trade TX (.rpc is not a function?)
 
 ## Roadmap
 - Partial bids & asks

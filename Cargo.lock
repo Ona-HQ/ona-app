@@ -1642,7 +1642,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tanto"
+name = "ona"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",
