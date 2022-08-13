@@ -27,10 +27,7 @@ https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9b
 - Fix cancel TX as a user
 - Show error messages to user
 - How does a trade end? (FinishedTrade state)
-- Documentation
 - Monitize trade as trade manager
-- Twitter Account
-- Email Account
 - Twitter Thread
 - Demo video
 
@@ -67,6 +64,9 @@ https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9b
 - Fix creating account redirect
 - Roadmap
 - Fix fund trade TX (.rpc is not a function?)
+- Email Account
+- Documentation
+- Twitter Account
 
 ## Roadmap
 - Partial bids & asks
