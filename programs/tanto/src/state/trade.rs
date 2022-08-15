@@ -18,6 +18,7 @@ pub struct Trade {
   funding_goal: u64,
   pub state: TradeState,
   pub total_funding: u64,
+  pub result_amount: u64, // amount that the trade returned (0 if liquidated)
   pub created_at: i64,
   pub deposit_mint: Pubkey,
   pub perp_market: Pubkey,
@@ -85,10 +86,23 @@ impl Trade {
     return self.entry_price / 10000;
   }
 
+  pub fn calculate_mango_target_price(&self) -> i64 {
+    // we save the price with 6 decimals
+    // e.g. $38 is saved as 38,000,000
+    // mango markets expects 2 decimals
+    return self.target_price / 10000;
+  }
+
   pub fn calculate_mango_entry_lots(&self) -> i64 {
     // 100 equals one lot, usually
     // lots * entry price = total funding
     return self.leverage as i64 * (self.total_funding as i64 / 10000 as i64) / (self.entry_price / 1000000);
+  }
+
+  pub fn calculate_mango_target_lots(&self) -> i64 {
+    // 100 equals one lot, usually
+    // lots * entry price = total funding
+    return self.leverage as i64 * (self.total_funding as i64 / 10000 as i64) / (self.target_price / 1000000);
   }
 
   pub fn token_amount(&self) -> i64 {
@@ -122,6 +136,11 @@ impl Trade {
 
   pub fn set_state(&mut self, state: TradeState) -> Result<()> {
     self.state = state;
+    Ok(())
+  }
+
+  pub fn set_result_amount(&mut self, amount: u64) -> Result<()> {
+    self.result_amount = amount;
     Ok(())
   }
 

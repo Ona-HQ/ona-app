@@ -67,7 +67,6 @@ const New: NextPage = () => {
           [utf8.encode('new-trade'), anchorWallet.publicKey.toBuffer(), new BN(globals.lastTradeId - 1).toArrayLike(Buffer, 'be', 8)],
           program.programId,
         );
-
         router.push(`/trades/${tradePDA}/create`)
       } else {
         console.log('show bad error!');
@@ -76,7 +75,7 @@ const New: NextPage = () => {
 
     const tx = await Trade.createTrade(anchorWallet, state);
     const response = await tx.rpc();
-    goToNextStep(tx);
+    goToNextStep(response);
   };
 
   return (

@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react'
 import { Utils } from '../common/Utils'
 import { Trade } from '../models/Trade'
 
-export const FundTradeModal: FC = ({ anchorWallet, trade, userPDA, setShowFundModal, setTxId, reloadTrade }) => {
+export const FundTradeModal: FC = ({ anchorWallet, trade, userPDA, setShowFundModal, setTxId, processTransaction }) => {
   const [amount, setAmount] = useState(1000);
 
   const handleInputChange = (event) => {
@@ -17,14 +17,7 @@ export const FundTradeModal: FC = ({ anchorWallet, trade, userPDA, setShowFundMo
     }
 
     const tx = await Trade.fund(anchorWallet, trade, userPDA, amount);
-    tx.rpc().then((response) => {
-      setTxId(tx);
-      if (Utils.getTransactionStatus(response)) {
-        reloadTrade();
-      } else {
-        console.log('show bad error!');
-      }
-    });
+    await processTransaction(tx);
   };
 
   return (

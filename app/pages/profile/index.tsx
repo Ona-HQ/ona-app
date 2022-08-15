@@ -38,7 +38,8 @@ const Profile: NextPage = () => {
         setAccount(account);
         if (account.fundedTrades.length > 0) {
           const trades = await program.account.trade.fetchMultiple(account.fundedTrades);
-          setFundedTrades(trades);
+          const tradesArray = trades.map((trade, idx) => { return { account: trade, publicKey: account.fundedTrades[idx] } });
+          setFundedTrades(tradesArray);
         }
       }
       setIsLoading(false);
@@ -91,7 +92,7 @@ const Profile: NextPage = () => {
           <div className="mb-12">
             {fundedTrades.length > 0 ? (
               <>
-                {fundedTrades.map(trade => <TradeLayout trade={trade} publicKey={new PublicKey('6xX6va3gazvrW6YABGh2DVEaKtm3M4qBRRmjj1Vt1XNb')} view='sm' />)}
+                {fundedTrades.map(trade => <TradeLayout trade={trade.account} publicKey={new PublicKey(trade.publicKey)} view='sm' />)}
               </>
             ) : (
               <Link href="/">

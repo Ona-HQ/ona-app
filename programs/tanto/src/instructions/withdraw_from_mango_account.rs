@@ -70,6 +70,7 @@ pub fn withdraw_from_mango_account(
     &[&seeds[..]],
   )?;
   trade.set_state(TradeState::WithdrawnFunds)?;
+  trade.set_result_amount(ctx.accounts.vault.amount)?;
   user.update_success_rate(ctx.accounts.vault.amount > trade.total_funding)?;
 
   Ok(())

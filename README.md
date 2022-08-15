@@ -5,7 +5,7 @@ in anchor.toml file add `wallet = "./id.json"`
 then in the project directory:
 `solana-keygen new -o id.json`
 
-this will generate something lik this: `pubkey: 9bFcXvyjBuELw522FTRSU1umTTGaSLLD5iujjpQK6wt6`
+this will generate something like this: `pubkey: 9bFcXvyjBuELw522FTRSU1umTTGaSLLD5iujjpQK6wt6`
 since you are using this wallet airdrop
 `solana airdrop 2 9bFcXvyjBuELw522FTRSU1umTTGaSLLD5iujjpQK6wt6 --url devnet`
 
@@ -31,7 +31,7 @@ lib.rs
 anchor.toml
 `yourProjectName = "paste the programId of deployed contract"`
 
-now run anchor build again now we are ready to deploy
+now run `anchor build` again now we are ready to deploy
 `anchor deploy`
 
 

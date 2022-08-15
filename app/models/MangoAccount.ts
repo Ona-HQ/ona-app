@@ -318,8 +318,22 @@ export class MangoAccount {
       program.programId,
     );
 
+    const mangoAccount = await client.getMangoAccount(
+      mangoAccountPk,
+      mangoGroup.dexProgramId,
+    );
+    const cache = await mangoGroup.loadCache(mangoConnection);
+
+    if (!mangoAccount) {
+      return;
+    }
+
+    // Find USDC
+    const tokenIndex = mangoGroup.getRootBankIndex(rootBank.publicKey);
+    const amount = parseInt(mangoAccount.getAvailableBalance(mangoGroup, cache, tokenIndex));
+
     // Withdraws from both Mango (if required) and sends pro-rata funds to user
-    return program.methods.withdrawFromMangoAccount(new BN(1000000000)).accounts({
+    return program.methods.withdrawFromMangoAccount(new BN(amount)).accounts({
       mangoProgram: mangoProgramIdPk,
       mangoGroup: mangoGroupKey,
       mangoAccount: mangoAccountPk,

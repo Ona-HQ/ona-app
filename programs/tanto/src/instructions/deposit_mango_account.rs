@@ -13,7 +13,6 @@ pub fn deposit_mango_account(
   require_keys_eq!(ctx.accounts.payer.key(), owner, WithdrawProhibited);
 
   let id = trade.id.to_be_bytes();
-
   let seeds = &[
     b"new-trade".as_ref(),
     owner.as_ref(),

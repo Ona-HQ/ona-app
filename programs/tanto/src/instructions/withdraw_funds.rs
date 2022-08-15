@@ -5,7 +5,6 @@ use crate::state::trade_funding::*;
 
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token;
 use anchor_spl::token::{Mint, Token, TokenAccount};
 
 pub fn withdraw_funds(
@@ -22,48 +21,55 @@ pub fn withdraw_funds(
     OnaError::WithdrawProhibited
   );
   require_keys_eq!(ctx.accounts.usdc_mint.key(), usdc_token::ID, OnaError::WrongTokenMint);
+  require!(ctx.accounts.trade_funding.has_funded, OnaError::WithdrawProhibited);
+  let mut number_of_tokens = 0;
 
   if diff >= 1153384
     && trade.state != TradeState::InitiatedTrade
     && trade.state != TradeState::FinishedTrade
   {
     trade.set_state(TradeState::CancelledTrade)?;
-    let funding_amount = ctx.accounts.trade_funding.amount;
-    token::transfer(ctx.accounts.transfer_ctx(), funding_amount)?;
-    {
-      let trade_funding = &mut ctx.accounts.trade_funding;
-      trade_funding.withdraw_funds()?;
-    }
+    number_of_tokens = ctx.accounts.trade_funding.amount;
   } else if trade.state == TradeState::WithdrawnFunds { // funds are back from the Mango account
     let trade_funding = &ctx.accounts.trade_funding;
     let vault = &ctx.accounts.vault;
-    let number_of_tokens = trade.calculate_withdrawal_funds(trade_funding.amount, vault.amount);
-    token::transfer(ctx.accounts.transfer_ctx(), number_of_tokens)?;
-    {
-      let trade_funding = &mut ctx.accounts.trade_funding;
-      trade_funding.withdraw_funds()?;
-    }
+    number_of_tokens = trade.calculate_withdrawal_funds(trade_funding.amount, vault.amount);
+  }
+
+  if number_of_tokens > 0 {
+    let owner = trade.owner.key();
+    let id = trade.id.to_be_bytes();
+    let seeds = &[
+      b"new-trade".as_ref(),
+      owner.as_ref(),
+      &id.as_ref(),
+      &[trade.bump],
+    ];
+    anchor_spl::token::transfer(
+      CpiContext::new_with_signer(
+        ctx.accounts.token_program.to_account_info(),
+        anchor_spl::token::Transfer {
+          from: ctx.accounts.vault.to_account_info(),
+          to: ctx.accounts.sender_wallet.to_account_info(),
+          authority: ctx.accounts.trade.to_account_info(),
+        },
+        &[&seeds[..]],
+      ),
+      number_of_tokens,
+    )?;
+  }
+
+  {
+    let trade_funding = &mut ctx.accounts.trade_funding;
+    trade_funding.withdraw_funds()?;
   }
 
   Ok(())
 }
 
-impl<'info> WithdrawFunds<'info> {
-  pub fn transfer_ctx(&self) -> CpiContext<'_, '_, '_, 'info, token::Transfer<'info>> {
-    let program = self.token_program.to_account_info();
-    let accounts = token::Transfer {
-      from: self.vault.to_account_info(),
-      to: self.sender_wallet.to_account_info(),
-      authority: self.trade.to_account_info(),
-    };
-    CpiContext::new(program, accounts)
-  }
-}
-
-// TODO: dynamic space size
 #[derive(Accounts)]
 pub struct WithdrawFunds<'info> {
-  #[account(mut, seeds = [b"new-trade".as_ref(), payer.key().as_ref()], bump = trade.bump)]
+  #[account(mut, seeds = [b"new-trade".as_ref(), trade.owner.key().as_ref(), &trade.id.to_be_bytes().as_ref()], bump = trade.bump)]
   pub trade: Account<'info, Trade>,
 
   #[account(
@@ -73,7 +79,6 @@ pub struct WithdrawFunds<'info> {
   )]
   pub vault: Account<'info, TokenAccount>, // escrow vault to withdraw from
 
-  // TODO: LOOK AT THIS - CANNOT BE INITIATED ON THE FLY WITH INIT?!!
   #[account(
     mut,
     constraint = sender_wallet.owner == payer.key(),

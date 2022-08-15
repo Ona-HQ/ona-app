@@ -5,7 +5,7 @@ pub mod errors;
 pub mod instructions;
 pub mod state;
 
-declare_id!("7cww21Ze4xT6nh2B7RUQ7w25zeXdf2h6DgS2M9wjU2Pp");
+declare_id!("AsNxpqVFeND66KZCA6PFQH5pKB4TWyXykRWhUvpDkRkk");
 
 #[program]
 pub mod ona {
@@ -57,7 +57,7 @@ pub mod ona {
     instructions::market_close_perp_orders_mango::market_close_perp_orders_mango(ctx)
   }
 
-  // When the user does not initiate a trade within 4 weeks after funding window
+  // When the user does not initiate a trade within 2 weeks after funding window
   // The funding deposits are unlocked for withdrawal
   // Or when the trade is finished (success or failure), users can also withdraw
   // Gets his notional deposit back (pro-rata share of what was deposited)

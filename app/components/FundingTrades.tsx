@@ -81,7 +81,7 @@ export const FundingTrades: FC = ({ hasAccount }) => {
           </div>
           
           {trades.length > 0 ? (
-            <div className="grid grid-cols-2 mt-2 mb-2">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 mt-2 mb-2">
               {trades.map(trade => <TradeLayout trade={trade.account} publicKey={trade.publicKey} view='sm' />)}
             </div>
           ) : hasAccount ? (

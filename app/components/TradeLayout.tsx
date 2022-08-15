@@ -2,49 +2,59 @@ import { FC, useEffect, useState } from 'react';
 import { Trade } from '../models/Trade'
 import { MangoAccount } from '../models/MangoAccount'
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
-// import { WalletSignTransactionError } from '@solana/wallet-adapter-base';
 import { utils, BN } from '@project-serum/anchor';
 import { Utils } from '../common/Utils'
 import { Connection, PublicKey } from '@solana/web3.js';
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+
 import { FundTradeModal } from '../components/FundTradeModal'
+import { DepositToMangoModal } from '../components/DepositToMangoModal'
+import { CancelAllOrdersModal } from '../components/CancelAllOrdersModal'
+import { MarketCloseModal } from '../components/MarketCloseModal'
+
 import { MangoClient } from "@blockworks-foundation/mango-client";
 import { TxStatus } from '../components/TxStatus'
 
 export const TradeLayout: FC = ({ trade, publicKey, view }) => {
   const router = useRouter();
 
-  // const [trade, setTrade] = useState(tradeObject);
   const [showFundModal, setShowFundModal] = useState(false);
+  const [showDepositModal, setShowDepositModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showMarketCloseModal, setShowMarketCloseModal] = useState(false);
+
+  const [tradeObject, setTrade] = useState(trade);
   const [hasFundedTrade, setHasFundedTrade] = useState(false);
   const [account, setAccount] = useState({});
+  const [tradeFunding, setTradeFunding] = useState({});
   const [totalTrades, setTotalTrades] = useState(0);
 
-  const startTime = new Date(1000 * parseInt(trade.createdAt.toString(), 10));
-  const percentageFunded = 100 * parseFloat(trade.totalFunding) / parseFloat(trade.fundingGoal);
-  const minPercentage = Math.max(5, percentageFunded);
-
-  // const [startTime, setStartTime] = useState(new Date());
-  // const [percentageFunded, setPercentageFunded] = useState(0);
-  // const [minPercentage, setMinPercentage] = useState(5);
+  const [percentageFunded, setPercentageFunded] = useState(100 * parseFloat(trade.totalFunding) / parseFloat(trade.fundingGoal));
+  const [minPercentage, setMinPercentage] = useState(Math.max(5, percentageFunded));
   const [tradeSuccessPercentage, setTradeSuccessPercentage] = useState();
 
   const [tradePDA, setTradePDA] = useState('');
   const [userPDA, setUserPDA] = useState('');
   const [mangoAccount, setMangoAccount] = useState('');
+  const [mangoUrl, setMangoUrl] = useState('');
+  const [tx, setTx] = useState({});
   const [txId, setTxId] = useState('');
   const [error, setError] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const anchorWallet = useAnchorWallet();
   const utf8 = utils.bytes.utf8;
+  const startTime = new Date(1000 * parseInt(trade.createdAt.toString(), 10));
+  const tradeSuccessful = trade.resultAmount > trade.totalFunding;
 
   const processTransaction = async (tx) => {
     try {
       const response = await tx.rpc();
-      setTxId(tx);
+      setTxId(response);
       if (Utils.getTransactionStatus(response)) {
+        setIsSuccess(true);
         await reloadTrade();
       } else {
         setError({ message: 'An error with the transaction occurred. Check the transaction and try again.' });
@@ -61,7 +71,9 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
 
     const program = Utils.getProgram(anchorWallet);
     const newTrade = await program.account.trade.fetch(publicKey);
-    trade = newTrade;
+    setTrade(newTrade);
+    setPercentageFunded(100 * parseFloat(newTrade.totalFunding) / parseFloat(newTrade.fundingGoal));
+    setMinPercentage(Math.max(5, percentageFunded));
   };
 
   useEffect(() => {
@@ -86,9 +98,27 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
         ],
         mangoProgramIdPk,
       );
-      // console.log(tradePDA.toBase58(), mangoAccountPk.toBase58());
 
       setMangoAccount(mangoAccountPk);
+      if (process.env.NEXT_PUBLIC_NETWORK === 'devnet') {
+        setMangoUrl(`https://devnet.mango.markets/account?pubkey=${mangoAccountPk}`);
+      }  else {
+        setMangoUrl(`https://trade.mango.markets/account?pubkey=${mangoAccountPk}`);
+      }
+    };
+
+    const loadFunding = async (tradePDA) => {
+      try {
+        const [fundingPDA] = await PublicKey.findProgramAddress(
+          [utf8.encode('new-funding'), tradePDA.toBuffer(), anchorWallet.publicKey.toBuffer()],
+          program.programId
+        )
+        const funding = await program.account.tradeFunding.fetch(fundingPDA);
+        setTradeFunding(funding);
+        setHasFundedTrade(true);
+      } catch (_e) {
+        setHasFundedTrade(false);
+      }
     };
 
     const loadTradePDA = async () => {
@@ -99,6 +129,7 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
 
       setTradePDA(tradePDA);
       loadMangoAccount(tradePDA);
+      loadFunding(tradePDA);
     };
 
     const tryLoadUser = async () => {
@@ -112,7 +143,11 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
         setUserPDA(userPDA);
         const totalTrades = parseInt(account.successfulTrades) + parseInt(account.failedTrades);
         setTotalTrades(totalTrades);
-        setTradeSuccessPercentage(100 * parseInt(account.successfulTrades) / totalTrades);
+        if (totalTrades > 0) {
+          setTradeSuccessPercentage(100 * parseInt(account.successfulTrades) / totalTrades);
+        } else {
+          setTradeSuccessPercentage(0);
+        }
       }
       setIsLoading(false);
     };
@@ -128,15 +163,6 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     }
 
     const tx = await MangoAccount.create(anchorWallet, trade);
-    await processTransaction(tx);
-  };
-
-  const deposit = async () => {
-    if (!anchorWallet) {
-      return;
-    }
-
-    const tx = await MangoAccount.deposit(anchorWallet, trade);
     await processTransaction(tx);
   };
 
@@ -158,24 +184,6 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     await processTransaction(tx);
   }
 
-  const marketClose = async () => {
-    if (!anchorWallet) {
-      return;
-    }
-
-    const tx = await MangoAccount.marketCloseOrder(anchorWallet, trade, tradePDA, mangoAccount);
-    await processTransaction(tx);
-  }
-
-  const cancel = async () => {
-    if (!anchorWallet) {
-      return;
-    }
-
-    const tx = await MangoAccount.cancelAllOrders(anchorWallet, trade, tradePDA, mangoAccount);
-    await processTransaction(tx);
-  }
-
   const withdraw = async () => {
     if (!anchorWallet) {
       return;
@@ -185,25 +193,67 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
     await processTransaction(tx);
   }
 
+  const withdrawLeftover = async () => {
+    if (!anchorWallet) {
+      return;
+    }
+
+    const tx = await Trade.withdrawLeftover(anchorWallet, trade, tradePDA, mangoAccount);
+    await processTransaction(tx);
+  }
+
   return (
     <>
-      {showFundModal ? (
-        <FundTradeModal
-          anchorWallet={anchorWallet}
-          trade={trade}
-          userPDA={userPDA}
-          setShowFundModal={setShowFundModal}
-          setTxId={setTxId}
-          reloadTrade={reloadTrade}
-        />
-      ) : null}
-
       {txId || error ? (
-        <TxStatus txId={txId} error={error} setTxId={setTxId} setError={setError} />
+        <TxStatus txId={txId} error={error} isSuccess={isSuccess} setTxId={setTxId} setError={setError} setIsSuccess={setIsSuccess} />
       ) : null}
 
       <div className="wrapper pt-10 px-8 flex flex-col border dark:border-0 mb-12 mr-4">
         <article className="mb-4 break-inside p-4 rounded-xl bg-white dark:bg-slate-800 flex flex-col place-self-center bg-clip-border w-full">
+          {showFundModal ? (
+            <FundTradeModal
+              anchorWallet={anchorWallet}
+              trade={tradeObject}
+              userPDA={userPDA}
+              setShowFundModal={setShowFundModal}
+              setTxId={setTxId}
+              processTransaction={processTransaction}
+            />
+          ) : null}
+          {showDepositModal ? (
+            <DepositToMangoModal
+              anchorWallet={anchorWallet}
+              trade={tradeObject}
+              setShowDepositModal={setShowDepositModal}
+              setTxId={setTxId}
+              processTransaction={processTransaction}
+            />
+          ) : null}
+
+          {showCancelModal ? (
+            <CancelAllOrdersModal
+              anchorWallet={anchorWallet}
+              trade={tradeObject}
+              tradePDA={tradePDA}
+              mangoAccount={mangoAccount}
+              setShowCancelModal={setShowCancelModal}
+              setTxId={setTxId}
+              processTransaction={processTransaction}
+            />
+          ) : null}
+
+          {showMarketCloseModal ? (
+            <MarketCloseModal
+              anchorWallet={anchorWallet}
+              trade={tradeObject}
+              tradePDA={tradePDA}
+              mangoAccount={mangoAccount}
+              setShowMarketCloseModal={setShowMarketCloseModal}
+              setTxId={setTxId}
+              processTransaction={processTransaction}
+            />
+          ) : null}
+          
           <div className="flex pb-6 items-center justify-between">
             <div className="flex">
               <a target="_blank" className="inline-block mr-4" href={`https://www.twitter.com/${account.twitter}`}>
@@ -217,8 +267,8 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
                     {tradeSuccessPercentage}% <span className="mr-4 ml-4">&bull;</span> {totalTrades} trade(s)
                   </span>
                 </div>
-                <div className="text-slate-500 dark:text-slate-300 dark:text-slate-400">
-                  {startTime.toLocaleDateString()}
+                <div onClick={() => showTx()} className="text-slate-500 dark:text-slate-300 dark:text-slate-400">
+                  {startTime.toLocaleDateString()} 
                 </div>
               </div>
             </div>
@@ -233,7 +283,7 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
               {trade.direction ? 'Long' : 'Short'}
             </span>
           </span>
-          {trade.state['awaitingMangoAccount'] ? (
+          {tradeObject.state['awaitingMangoAccount'] ? (
             <div className="py-4">
               <div class="rounded-md bg-red-50 p-4">
                 <div class="flex">
@@ -297,7 +347,7 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
 
           <div className="w-full pb-12">
             <div>
-              <div className="text-white float-left ml-4">${parseFloat(trade.totalFunding / 1000000)}</div>
+              <div className="text-white float-left ml-4">${parseFloat(tradeObject.totalFunding / 1000000)}</div>
               <div className="text-gray-600 float-right mr-4 dark:text-white">${parseFloat(trade.fundingGoal / 1000000)}</div>
             </div>
             <div className="mb-4 w-full h-6 bg-gray-200 rounded-full dark:bg-gray-700">
@@ -318,8 +368,8 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
               </a>
             </Link>
 
-            {!trade.state['awaitingMangoAccount'] ? (
-              <Link href={`https://trade.mango.markets/account?pubkey=${mangoAccount}`}>
+            {!tradeObject.state['awaitingMangoAccount'] ? (
+              <Link href={mangoUrl}>
                 <a target="_blank" className="inline-flex items-center text-center content-center justify-self-center">
                   <span className="mr-2">
                     <svg xmlns="http://www.w3.org/2000/svg" className="dark:text-white h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -358,23 +408,23 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
           </div>
 
           <div className="mt-6">
-            {trade.state['funding'] && trade.totalFunding < trade.fundingGoal ? (
+            {tradeObject.state['funding'] && parseFloat(tradeObject.totalFunding) < parseFloat(tradeObject.fundingGoal) ? (
               <div className="w-full">
                 <button onClick={() => setShowFundModal(true)} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
                   Fund trade
                 </button>
               </div>
             ) : null}
-            {trade.state['finishedTrade'] && trade.owner.toBase58() === anchorWallet.publicKey.toBase58() ? (
+            {(tradeObject.state['cancelledTrade'] || tradeObject.state['finishedTrade']) && tradeObject.owner.toBase58() === anchorWallet.publicKey.toBase58() ? (
               <div className="w-full">
-                <button onClick={() => withdraw()} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
+                <button onClick={() => withdraw()} className="mb-4 py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
                   Finish Trade & Withdraw Funds from Mango
                 </button>
               </div>
             ) : null}
-            {trade.state['finishedTrade'] && (trade.owner.toBase58() === anchorWallet.publicKey.toBase58() || hasFundedTrade) ? (
+            {tradeObject.state['withdrawnFunds'] && hasFundedTrade && tradeFunding.amount > 0 ? (
               <div className="w-full">
-                <button onClick={() => withdraw()} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
+                <button onClick={() => withdrawLeftover()} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
                   Take profits
                 </button>
               </div>
@@ -384,41 +434,48 @@ export const TradeLayout: FC = ({ trade, publicKey, view }) => {
               // admin functions
             }
             <hr className="mb-4 mt-4"/>
-            {!trade.state['finishedTrade'] ? (
+            {!tradeObject.state['cancelledTrade'] ? (
               <>
-                <h3 className="text-base font-semibold text-indigo-600 tracking-wide uppercase mb-4">Only visible to you (trade owner):</h3>
-                {trade.state['awaitingMangoAccount'] && trade.owner.toBase58() === anchorWallet.publicKey.toBase58() ? (
+                <h3 className="text-base font-semibold text-indigo-600 tracking-wide uppercase mb-4 dark:text-white">Only visible to you (trade owner):</h3>
+                {tradeObject.state['awaitingMangoAccount'] && trade.owner.toBase58() === anchorWallet.publicKey.toBase58() ? (
                   <div className="w-full">
                     <button onClick={() => createMangoAccount()} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
                       Create Mango Account
                     </button>
                   </div>
                 ) : null}
-                {(trade.state['funding'] || trade.state['fundingComplete']) && trade.owner.toBase58() === anchorWallet.publicKey.toBase58() && trade.totalFunding > 0 ? (
+                {(tradeObject.state['funding'] || tradeObject.state['fundingComplete']) && trade.owner.toBase58() === anchorWallet.publicKey.toBase58() && tradeObject.totalFunding > 0 ? (
                   <div className="w-full mt-4">
-                    <button onClick={() => deposit()} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
+                    <button onClick={() => setShowDepositModal(true)} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
                       Deposit Funds to Mango Account
                     </button>
                   </div>
                 ) : null}
-                {(trade.state['fundingDeposited']) && trade.owner.toBase58() === anchorWallet.publicKey.toBase58() ? (
+                {(tradeObject.state['fundingDeposited']) && trade.owner.toBase58() === anchorWallet.publicKey.toBase58() ? (
                   <div className="w-full mb-4">
                     <button onClick={() => placeOrder()} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
                       Place Perp Order on {trade.asset}/USDC Mango Perp Market
                     </button>
                   </div>
                 ) : null}
-                {(trade.state['initiatedTrade']) && trade.owner.toBase58() === anchorWallet.publicKey.toBase58() ? (
+                {(tradeObject.state['initiatedTrade']) && trade.owner.toBase58() === anchorWallet.publicKey.toBase58() ? (
                   <div className="w-full mb-4">
-                    <button onClick={() => marketClose()} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
+                    <button onClick={() => setShowMarketCloseModal(true)} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
                       Market Close
                     </button>
                   </div>
                 ) : null}
-                {(trade.state['initiatedTrade']) && trade.owner.toBase58() === anchorWallet.publicKey.toBase58() ? (
+                {(tradeObject.state['initiatedTrade'] || tradeObject.state['finishedTrade']) && trade.owner.toBase58() === anchorWallet.publicKey.toBase58() ? (
                   <div className="w-full mb-4">
-                    <button onClick={() => cancel()} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
+                    <button onClick={() => setShowCancelModal(true)} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
                       Cancel all open orders
+                    </button>
+                  </div>
+                ) : null}
+                 {tradeObject.state['withdrawnFunds'] && tradeSuccessful && trade.owner.toBase58() === anchorWallet.publicKey.toBase58() ? (
+                  <div className="w-full mb-4">
+                    <button onClick={() => setShowCancelModal(true)} className="py-3 px-4 w-full block bg-slate-100 dark:bg-slate-700 dark:text-white text-center rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition ease-in-out delay-75">
+                      Take performance fee
                     </button>
                   </div>
                 ) : null}

@@ -1,11 +1,14 @@
 
 
+https://twitter.com/pencilflip/status/1483880018858201090
+
 
 Useful links:
 https://solanacookbook.com/integrations/mango.html#how-to-create-a-mango-account
 https://github.com/solana-developers/solana-cookbook/pull/299/files
 https://github.com/blockworks-foundation/mango-client-v3/blob/main/src/ids.json
 https://github.com/coral-xyz/anchor/blob/master/ts/src/program/namespace/account.ts
+https://github.com/blockworks-foundation/mango-ui/blob/b6abfc6c13b71fc17ebbe766f50b8215fa1ec54f/src/utils/mango.tsx
 
 ENV backup
 NEXT_PUBLIC_NETWORK=localnet
@@ -21,11 +24,50 @@ Mainnet Mango Program v3: mv3ekLzLbnVPNxjSKvqBpU3ZeZXPQdEC3bp5MDEBG68
 https://solanacookbook.com/integrations/mango.html#how-to-deposit-usdc-into-a-mango-account
 https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9bbf7b6dc58b939a0d64/code/mango/create-account/create-account.en.rs
 
+https://www.tradingview.com/chart/SOLUSDT/7jB8Sksc-SOL-Bullish-Triangle-Break-Out-Soon/
+
 # TODO
-- Write down whole flow with trade states + How does a trade end? (FinishedTrade state)
 - Demo video
 - Twitter Thread
+🚀 ANNCOUNCING 🚀
+
+Ona: The first social trading protocol on Solana that allows you to invest into single trades with friends
+We are powered by Solana and Mango Markets, and proud participants in Solana's Summer Camp Hackathon :)
+
+👉  https://ona.so
+
+a thread 🧵 (1/8)
+
+2/8
+Every now and then we discover a great trading opportunity. What do you do?
+
+Some traders share their views on Twitter, some others have private trading groups and still others simply execute. However... besides trading this idea yourself, there has been no way to share the opportunity directly with others or to monetize it.
+
+Until now.
+
+3/8
+Ona allows you to turn a trade idea into an investible on-chain fundraising mechanism, natively on Solana. A trader can share their TradingView plan and get funded by the Solana community within hours. Once funded, limit orders are automatically and transparently placed on a Mango Markets account.
+
+4/8
+When a trade ends, investors get their pro-rata profits and trade owners get a 10% profit share. This share goes up as the trader's reputation on Ona improves.
+
+5/6
+Solana is a high-speed L1 settlement layer which processes over a hundred thousand transactions per minute. In other words, it's the perfect platform to build this kind of trading protocol in a trustless way. A trade owner never has direct access to the deposited funds as they can only interact through the Mango limit orders (short and long with the funds on leverage).
+
+6/7
+Us ourselves are successful startup founders (having been CTO and CPO pre and post-acquisition) with over a decade of product development. We are also avid traders and live on TradingView - every time we see a great trade, we'd love to invest in it :)
+
+6/7
+Ona will be accessible on Devnet soon. Our Mainnet launch happens in September. Read up on our documentation to get a sense of the little details: https://docs.ona.so
+
+6/7
+Enjoy using the protocol! DMs are open. Suggestions are welcome. Follow along for new developments and discovery of unique trades 💕
+
+Happy trading! 
+
+
 - Settle Fees + Settle PnL (https://explorer.solana.com/tx/5y5HzrjfonmeVSmBEZf2dd34LgerPont1agngVrUMydjtVUkn92HGXcFWZQ14RF8kiSTT77Ykg9HNbrYmWeLk5n6?cluster=devnet)
+- Look into SetDelegate and CloseMangoAccount
 
 ## Doing
 
@@ -64,6 +106,7 @@ https://github.com/solana-developers/solana-cookbook/blob/fcba8d43e618e6f1a62d9b
 - Fix cancel TX as a user
 - Show error messages to user
 - Monitize trade as trade manager
+- Write down whole flow with trade states + How does a trade end? (FinishedTrade state)
 
 ## Roadmap
 - Partial bids & asks

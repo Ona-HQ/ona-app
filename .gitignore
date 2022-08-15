@@ -9,4 +9,6 @@ target
 node_modules
 test-ledger
 id.json
+id2.json
 app/out/
+notes.md

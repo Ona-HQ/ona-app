@@ -41,7 +41,7 @@ export function Hero() {
                     <path d="M203.371.916c-26.013-2.078-76.686 1.963-124.73 9.946L67.3 12.749C35.421 18.062 18.2 21.766 6.004 25.934 1.244 27.561.828 27.778.874 28.61c.07 1.214.828 1.121 9.595-1.176 9.072-2.377 17.15-3.92 39.246-7.496C123.565 7.986 157.869 4.492 195.942 5.046c7.461.108 19.25 1.696 19.17 2.582-.107 1.183-7.874 4.31-25.75 10.366-21.992 7.45-35.43 12.534-36.701 13.884-2.173 2.308-.202 4.407 4.442 4.734 2.654.187 3.263.157 15.593-.78 35.401-2.686 57.944-3.488 88.365-3.143 46.327.526 75.721 2.23 130.788 7.584 19.787 1.924 20.814 1.98 24.557 1.332l.066-.011c1.201-.203 1.53-1.825.399-2.335-2.911-1.31-4.893-1.604-22.048-3.261-57.509-5.556-87.871-7.36-132.059-7.842-23.239-.254-33.617-.116-50.627.674-11.629.54-42.371 2.494-46.696 2.967-2.359.259 8.133-3.625 26.504-9.81 23.239-7.825 27.934-10.149 28.304-14.005.417-4.348-3.529-6-16.878-7.066Z" />
                   </svg>
                   <span className="relative break-all lg:break-normal">
-                    trade, together
+                    trade, <br className="sm:inline md:hidden"/> together
                   </span>
                 </span>{' '}
               </h1>
@@ -52,7 +52,9 @@ export function Hero() {
                 {false ? (
                   <WalletMultiButton children={ 'Launch Ona' }/>
                 ) : (
-                  <button className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" tabIndex="0" type="button">Launching Sept 2022</button>
+                  <button className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" type="button">
+                    Launching Sept 2022
+                  </button>
                 )}
                 <a href="#more" className="ml-4 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Learn more
@@ -82,7 +84,7 @@ export function Hero() {
 
           <div className="mt-16 sm:mt-24 mt- lg:-mt-20 lg:col-span-6">
             <div className="z-10 relative pl-4 -mr-40 sm:mx-auto sm:max-w-3xl sm:px-0 lg:max-w-none lg:h-full">
-              <img className="lg:h-750 lg:w-auto lg:max-w-none opacity-0 transform translate-y-40" src="trade_preview_cut.png" alt="" style={{transform: 'translate(0px, 0px)', opacity: '1'}} />
+              <img className="lg:h-screen lg:w-auto lg:max-w-none opacity-0 transform translate-y-40 rounded-l-md overflow-hidden" src="trade_preview.png" alt="" style={{transform: 'translate(0px, 0px)', opacity: '1'}} />
             </div>
           </div>
         </div>

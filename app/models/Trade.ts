@@ -132,4 +132,62 @@ export class Trade {
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID
     }, instructions);
   }
+
+  static withdrawLeftover = async (anchorWallet, tradeObject, userPDA, amount) => {
+    const program = Utils.getProgram(anchorWallet);
+
+    const mint = new PublicKey(process.env.NEXT_PUBLIC_USDC_MINT);
+    const [tradePDA] = await PublicKey.findProgramAddress(
+      [utf8.encode('new-trade'), tradeObject.owner.toBuffer(), new BN(tradeObject.id).toArrayLike(Buffer, 'be', 8)],
+      program.programId,
+    );
+    const [fundingPDA] = await PublicKey.findProgramAddress(
+      [utf8.encode('new-funding'), tradePDA.toBuffer(), anchorWallet.publicKey.toBuffer()],
+      program.programId
+    )
+    let instructions: TransactionInstruction[] = [];
+    const senderATA = await getAssociatedTokenAddress(
+      mint,
+      anchorWallet.publicKey,
+      false
+    );
+    const recipientATA = await getAssociatedTokenAddress(
+      mint,
+      tradePDA,
+      true
+    );
+    try {
+      await getOrCreateAssociatedTokenAccount(
+        Utils.getConnection(),
+        anchorWallet.publicKey,
+        mint,
+        tradePDA,
+        true
+      );
+    } catch (e) {
+      instructions.push(
+        createAssociatedTokenAccountInstruction(
+          anchorWallet.publicKey,
+          recipientATA,
+          tradePDA,
+          mint
+        )
+      );
+    }
+    if (senderATA.instruction) instructions.push(senderATA.instruction);
+    if (instructions.length === 0) instructions = undefined;
+
+    return program.methods.withdrawFunds().accounts({
+      trade: tradePDA,
+      vault: recipientATA,
+      senderWallet: senderATA,
+      tradeFunding: fundingPDA,
+      payer: anchorWallet.publicKey,
+      usdcMint: mint,
+      associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+      systemProgram: SystemProgram.programId,
+      tokenProgram: TOKEN_PROGRAM_ID,
+      rent: anchorWeb3.SYSVAR_RENT_PUBKEY,
+    }, instructions);
+  }
 }

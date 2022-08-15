@@ -5,7 +5,7 @@ use anchor_lang::solana_program::program::invoke_signed;
 pub fn cancel_perp_order(
   ctx: Context<CancelPerpOrder>
 ) -> Result<()> {
-  let trade = &ctx.accounts.trade;
+  let trade = &mut ctx.accounts.trade;
   let owner = trade.owner.key();
   let id = trade.id.to_be_bytes();
   let seeds = &[
@@ -37,6 +37,7 @@ pub fn cancel_perp_order(
     ],
     &[&seeds[..]],
   )?;
+  trade.set_state(TradeState::CancelledTrade)?;
 
   Ok(())
 }

@@ -817,6 +817,10 @@
             "type": "u64"
           },
           {
+            "name": "resultAmount",
+            "type": "u64"
+          },
+          {
             "name": "createdAt",
             "type": "i64"
           },
@@ -913,6 +917,9 @@
             "name": "FinishedTrade"
           },
           {
+            "name": "WithdrawnFunds"
+          },
+          {
             "name": "CancelledTrade"
           }
         ]
@@ -963,6 +970,6 @@
     }
   ],
   "metadata": {
-    "address": "7cww21Ze4xT6nh2B7RUQ7w25zeXdf2h6DgS2M9wjU2Pp"
+    "address": "AsNxpqVFeND66KZCA6PFQH5pKB4TWyXykRWhUvpDkRkk"
   }
 }

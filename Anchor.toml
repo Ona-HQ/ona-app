@@ -2,16 +2,16 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-ona = "7cww21Ze4xT6nh2B7RUQ7w25zeXdf2h6DgS2M9wjU2Pp"
+ona = "AsNxpqVFeND66KZCA6PFQH5pKB4TWyXykRWhUvpDkRkk"
 [programs.devnet]
-ona = "7cww21Ze4xT6nh2B7RUQ7w25zeXdf2h6DgS2M9wjU2Pp"
+ona = "AsNxpqVFeND66KZCA6PFQH5pKB4TWyXykRWhUvpDkRkk"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
 cluster = "devnet"
-wallet = "./id.json"
+wallet = "./id2.json"
 # wallet = "/Users/philip/.config/solana/id.json"
 
 [scripts]

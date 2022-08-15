@@ -56,43 +56,39 @@ pub fn place_perp_order2(
   )?;
 
   // Place limit order with the target price
-  // invoke_signed(
-  //   &mango::instruction::place_perp_order2(
-  //     &ctx.accounts.mango_program.key(),
-  //     &ctx.accounts.mango_group.key(),
-  //     &ctx.accounts.mango_account.key(),
-  //     &trade.key(),
-  //     &ctx.accounts.mango_cache.key(),
-  //     &ctx.accounts.perp_market.key(),
-  //     &ctx.accounts.bids.key(),
-  //     &ctx.accounts.asks.key(),
-  //     &ctx.accounts.event_queue.key(),
-  //     None,
-  //     open_orders.as_slice(),
-  //     if trade.direction { Side::Ask } else { Side::Bid }, // use other (inverted) side
-  //     trade.target_price,
-  //     max_base_quantity,
-  //     trade.target_usdc_amount(),
-  //     trade.id + 1, // client order ID
-  //     order_type,
-  //     true, // reduce_only
-  //     expiry_timestamp,
-  //     limit,
-  //     ExpiryType::Relative,
-  //   ).unwrap(),
-  //   &[
-  //     ctx.accounts.mango_group.to_account_info().clone(),
-  //     ctx.accounts.mango_account.to_account_info().clone(),
-  //     trade.to_account_info().clone(),
-  //     ctx.accounts.mango_cache.to_account_info().clone(),
-  //     ctx.accounts.perp_market.to_account_info().clone(),
-  //     ctx.accounts.bids.to_account_info().clone(),
-  //     ctx.accounts.asks.to_account_info().clone(),
-  //     ctx.accounts.event_queue.to_account_info().clone(),
-  //     ctx.accounts.payer.to_account_info().clone()
-  //   ],
-  //   &[&seeds[..]],
-  // )?;
+  invoke_signed(
+    &mango::instruction::place_perp_order(
+      &ctx.accounts.mango_program.key(),
+      &ctx.accounts.mango_group.key(),
+      &ctx.accounts.mango_account.key(),
+      &trade.key(),
+      &ctx.accounts.mango_cache.key(),
+      &ctx.accounts.perp_market.key(),
+      &ctx.accounts.bids.key(),
+      &ctx.accounts.asks.key(),
+      &ctx.accounts.event_queue.key(),
+      Some(&trade.owner.key()), // referral
+      &mango_spot_open_orders,
+      if trade.direction { Side::Ask } else { Side::Bid },
+      trade.calculate_mango_target_price(), // price divided by 100, meaning '38' is $0.38. 3800 is $38
+      trade.calculate_mango_target_lots(), // size, 10 equals 0.1. in other words if you bid 38 with size 0.1, you open a bid of $0.038
+      trade.id, // client order ID
+      order_type,
+      true, // reduce only
+    ).unwrap(),
+    &[
+      ctx.accounts.mango_group.to_account_info().clone(),
+      ctx.accounts.mango_account.to_account_info().clone(),
+      trade.to_account_info().clone(),
+      ctx.accounts.mango_cache.to_account_info().clone(),
+      ctx.accounts.perp_market.to_account_info().clone(),
+      ctx.accounts.bids.to_account_info().clone(),
+      ctx.accounts.asks.to_account_info().clone(),
+      ctx.accounts.event_queue.to_account_info().clone(),
+      ctx.accounts.payer.to_account_info().clone()
+    ],
+    &[&seeds[..]],
+  )?;
   trade.initiate_trade()?;
 
   Ok(())
