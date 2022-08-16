@@ -243,7 +243,7 @@ export const Header: FC = ({ authenticated }) => {
             ) : null}
             <span>
               <span className="hidden lg:inline">
-                {false ? (
+                {true ? (
                   <WalletMultiButton />
                 ) : (
                   <button className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" tabIndex="0" type="button">

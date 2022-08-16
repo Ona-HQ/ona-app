@@ -49,7 +49,7 @@ export function Hero() {
                 Fund the best trades with friends.
               </p>
               <div className="mt-10 mb-2 flex gap-x-6 sm:items-center sm:justify-center lg:justify-start">
-                {false ? (
+                {true ? (
                   <WalletMultiButton children={ 'Launch Ona' }/>
                 ) : (
                   <button className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" type="button">
@@ -61,7 +61,6 @@ export function Hero() {
                   Learn more
                 </a>
               </div>
-              <span className="font-medium">Devnet URL will be shared publicly soon</span>
 
               <div className="mt-5 w-full sm:mx-auto sm:max-w-lg lg:ml-0 md:w-1/2 sm:w-1/2">
                 <div className="hidden sm:block">
