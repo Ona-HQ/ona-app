@@ -204,9 +204,9 @@ const New: NextPage = () => {
                       value={state.asset}
                     >
                       <option value="SOL">Solana (SOL)</option>
-                      <option value="BTC">Bitcoin (BTC)</option>
-                      <option value="ETH">Ethereum (ETH)</option>
-                      <option value="MNG">Mango (MNG)</option>
+                      <option value="SOL">Bitcoin (BTC) - Not supported on Devnet</option>
+                      <option value="SOL">Ethereum (ETH) - Not supported on Devnet</option>
+                      <option value="SOL">Mango (MNG) - Not supported on Devnet</option>
                     </select>
                   </div>
 
