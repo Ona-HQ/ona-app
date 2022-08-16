@@ -53,7 +53,8 @@ export function Hero() {
                   <WalletMultiButton children={ 'Launch Ona' }/>
                 ) : (
                   <button className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" type="button">
-                    Launching Sept 2022
+                    <span class="hidden sm:inline">Launching Sept 2022</span>
+                    <span class="sm:hidden">Sept 2022</span>
                   </button>
                 )}
                 <a href="#more" className="ml-4 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -84,7 +85,11 @@ export function Hero() {
 
           <div className="mt-16 sm:mt-24 mt- lg:-mt-20 lg:col-span-6">
             <div className="z-10 relative pl-4 -mr-40 sm:mx-auto sm:max-w-3xl sm:px-0 lg:max-w-none lg:h-full">
-              <img className="lg:h-screen lg:w-auto lg:max-w-none opacity-0 transform translate-y-40 rounded-l-md overflow-hidden" src="trade_preview.png" alt="" style={{transform: 'translate(0px, 0px)', opacity: '1'}} />
+              <img
+                className="lg:h-screen lg:w-auto lg:max-w-none opacity-0 transform translate-y-40 rounded-l-md hidden sm:inline"
+                src="trade_preview.png"
+                style={{transform: 'translate(0px, 0px)', opacity: '1'}}
+              />
             </div>
           </div>
         </div>

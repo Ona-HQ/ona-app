@@ -246,7 +246,10 @@ export const Header: FC = ({ authenticated }) => {
                 {false ? (
                   <WalletMultiButton />
                 ) : (
-                  <button className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" tabIndex="0" type="button">Launching Sept 2022</button>
+                  <button className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" tabIndex="0" type="button">
+                    <span class="hidden sm:inline">Launching Sept 2022</span>
+                    <span class="sm:hidden">Sept 2022</span>
+                  </button>
                 )}
               </span>
             </span>
