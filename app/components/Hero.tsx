@@ -50,7 +50,7 @@ export function Hero() {
               </p>
               <div className="mt-10 mb-2 flex gap-x-6 sm:items-center sm:justify-center lg:justify-start">
                 {true ? (
-                  <WalletMultiButton children={ 'Launch Ona' }/>
+                  <WalletMultiButton children={ 'Launch Ona' } className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" />
                 ) : (
                   <button className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" type="button">
                     <span class="hidden sm:inline">Launching Sept 2022</span>

@@ -244,7 +244,7 @@ export const Header: FC = ({ authenticated }) => {
             <span>
               <span className="hidden lg:inline">
                 {true ? (
-                  <WalletMultiButton />
+                  <WalletMultiButton className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" />
                 ) : (
                   <button className="wallet-adapter-button wallet-adapter-button-trigger bg-phantom" tabIndex="0" type="button">
                     <span class="hidden sm:inline">Launching Sept 2022</span>
